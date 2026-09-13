@@ -23,7 +23,7 @@ const Navbar = () => {
                         B
                     </span>
                     <span className="hidden font-display text-xl font-bold tracking-tight text-brand-navy sm:block">
-                        Bazario
+                        Bilash
                     </span>
                 </Link>
 
