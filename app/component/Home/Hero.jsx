@@ -81,7 +81,7 @@ const Hero = () => {
   const product = SLIDES[productIndex].product;
 
   return (
-    <section className="bg-brand-cream px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
+    <section className="px-4 py-10 sm:px-6 lg:px-8 lg:py-14">
       <style>{`
         @keyframes kenBurns {
           0%   { transform: scale(1)    translate3d(0, 0, 0); }
@@ -108,7 +108,7 @@ const Hero = () => {
       <div className="mx-auto max-w-7xl">
         <div className="flex flex-col gap-5 md:flex-row">
           {/* ============ BANNER (70%) ============ */}
-          <div className="relative w-full overflow-hidden rounded-3xl shadow-lg shadow-brand-navy/10 md:w-[70%]">
+          <div className="relative w-full overflow-hidden rounded-3xl shadow-lg shadow-brand-navy/10 md:w-[75%]">
             <div className="relative h-72 sm:h-80 md:h-96 overflow-hidden">
               {/* PREVIOUS slide — slides out to left */}
               {prevBanner !== null && prevBanner !== bannerIndex && (
@@ -184,43 +184,41 @@ const Hero = () => {
             </div>
           </div>
 
-          {/* ============ PRODUCT CARD (30%) ============ */}
-          <div className="relative w-full overflow-hidden rounded-3xl bg-white shadow-lg shadow-brand-navy/10 md:w-[30%]">
-            <div className="relative h-72 sm:h-80 md:h-96 overflow-hidden">
-              {/* PREVIOUS product — slides out to left */}
-              {prevProduct !== null && prevProduct !== productIndex && (
-                <div
-                  key={`prev-p-${prevProduct}`}
-                  className="absolute inset-0 z-[1] flex flex-col"
-                  style={{ animation: 'slideOutLeft 0.7s ease-in-out both' }}
-                >
-                  {/* same content for prev product */}
-                  <ProductContent product={SLIDES[prevProduct].product} />
-                </div>
-              )}
+        {/* ============ PRODUCT ============ */}
+<div className="relative w-full overflow-hidden rounded-3xl bg-white shadow-lg shadow-brand-navy/10 md:w-[25%]">
+  <div className="relative h-72 sm:h-80 md:h-96 overflow-hidden">
+    {prevProduct !== null && prevProduct !== productIndex && (
+      <div
+        key={`prev-p-${prevProduct}`}
+        className="absolute inset-0 z-[1] flex flex-col"
+        style={{ animation: 'slideOutLeft 0.7s ease-in-out both' }}
+      >
+        <ProductContent product={SLIDES[prevProduct].product} />
+      </div>
+    )}
 
-              {/* CURRENT product — slides in from right */}
-              <div
-                key={`cur-p-${productIndex}`}
-                className="absolute inset-0 z-[2] flex flex-col"
-                style={{ animation: 'slideInRight 0.7s ease-in-out both' }}
-              >
-                <ProductContent product={product} />
-              </div>
+    {/* CURRENT product */}
+    <div
+      key={`cur-p-${productIndex}`}
+      className="absolute inset-0 z-[2] flex flex-col"
+      style={{ animation: 'slideInRight 0.7s ease-in-out both' }}
+    >
+      <ProductContent product={product} />
+    </div>
 
-              {/* Vertical indicator */}
-              <div className="absolute right-3 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-1.5">
-                {SLIDES.map((s, i) => (
-                  <span
-                    key={s.tag}
-                    className={`h-1.5 w-1.5 rounded-full transition-all ${
-                      i === productIndex ? 'bg-brand-orange' : 'bg-ink/15'
-                    }`}
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
+    {/* Vertical indicator */}
+    <div className="absolute right-3 top-1/2 z-10 flex -translate-y-1/2 flex-col gap-1.5">
+      {SLIDES.map((s, i) => (
+        <span
+          key={s.tag}
+          className={`h-1.5 w-1.5 rounded-full transition-all ${
+            i === productIndex ? 'bg-brand-orange' : 'bg-ink/15'
+          }`}
+        />
+      ))}
+    </div>
+  </div>
+</div>
         </div>
       </div>
     </section>

@@ -100,7 +100,7 @@ const FeaturedCategories = () => {
     };
 
     return (
-        <section className="bg-brand-cream px-4 py-14 sm:px-6 lg:px-8">
+        <section className=" px-4 py-20 sm:px-6 lg:px-8">
             <style>{`
                 .no-scrollbar::-webkit-scrollbar { display: none; }
                 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -146,18 +146,15 @@ const FeaturedCategories = () => {
                     onTouchStart={() => setIsPaused(true)}
                     onTouchEnd={() => setIsPaused(false)}
                 >
-                    {/* Edge fades */}
-                    <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-10 bg-gradient-to-r from-brand-cream to-transparent" />
-                    <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-10 bg-gradient-to-l from-brand-cream to-transparent" />
-
+                
                     {/* Scroll container */}
                     <div
                         ref={scrollRef}
                         className="no-scrollbar flex gap-5 overflow-x-auto px-1 py-2"
                         style={{
                             scrollSnapType: 'x mandatory',
-                            scrollbarWidth: 'none',      // Firefox
-                            msOverflowStyle: 'none',     // IE/Edge
+                            scrollbarWidth: 'none',    
+                            msOverflowStyle: 'none',     
                         }}
                     >
                         {visible.map((cat, idx) => {
@@ -170,12 +167,11 @@ const FeaturedCategories = () => {
                                     className="group flex shrink-0 flex-col items-center gap-3"
                                     style={{
                                         scrollSnapAlign: 'start',
-                                        // ✅ Desktop e exactly 6 ta dekhabe
                                         flexBasis: 'calc((100% - 5 * 1.25rem) / 6)',
                                         animation: `catIn 0.4s ease-out ${idx * 0.03}s both`,
                                     }}
                                 >
-                                    {/* Ring + Image — boro kora holo */}
+                                    {/* Ring + Image — */}
                                     <div
                                         className={`relative aspect-square w-full rounded-full p-[3px] transition-all duration-300 ${
                                             isActive
