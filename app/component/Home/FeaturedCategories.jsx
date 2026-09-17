@@ -1,8 +1,11 @@
 "use client";
 
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 
 const FILTERS = ['All', 'Electronics', 'Fashion', 'Home', 'Beauty', 'Kids'];
+const slugify = (name) => name.toLowerCase().trim().replace(/\s+/g, '-');
+
 
 const CATEGORIES = [
     { name: 'T-Shirt', group: 'Fashion', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80', tag: 'New' },
@@ -21,7 +24,6 @@ const CATEGORIES = [
     { name: 'Handbag', group: 'Fashion', image: 'https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400&q=80' },
 ];
 
-// ✅ Ek line e koto ta dekhabe — responsive
 const VISIBLE_DESKTOP = 6;
 const AUTO_SLIDE_MS = 3000;
 
@@ -32,6 +34,8 @@ const FeaturedCategories = () => {
     const [isPaused, setIsPaused] = useState(false);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
+    const router = useRouter();
+
 
     const visible =
         activeFilter === 'All'
@@ -57,7 +61,6 @@ const FeaturedCategories = () => {
         };
     }, [visible]);
 
-    // ✅ Auto slide — ekta ekta kore scroll
     useEffect(() => {
         if (isPaused) return;
         const el = scrollRef.current;
@@ -80,7 +83,6 @@ const FeaturedCategories = () => {
         return () => clearInterval(id);
     }, [isPaused, visible]);
 
-    // ✅ Filter change hole scroll reset
     useEffect(() => {
         if (scrollRef.current) scrollRef.current.scrollTo({ left: 0, behavior: 'smooth' });
     }, [activeFilter]);
@@ -94,10 +96,13 @@ const FeaturedCategories = () => {
         el.scrollBy({ left: dir * step, behavior: 'smooth' });
     };
 
-    const handleCategoryClick = (cat) => {
+   
+
+     const handleCategoryClick = (cat) => {
         setActiveCategory(cat.name);
-        // TODO: backend connect
-    };
+        router.push(`/category/${slugify(cat.name)}`);
+       
+    }
 
     return (
         <section className=" px-4 py-20 sm:px-6 lg:px-8">
@@ -179,7 +184,7 @@ const FeaturedCategories = () => {
                                                 : 'bg-line group-hover:bg-brand-orange/50 group-hover:scale-[1.03]'
                                         }`}
                                     >
-                                        <div className="h-full w-full overflow-hidden rounded-full border-[3px] border-brand-cream bg-white shadow-sm">
+                                        <div className="h-full cursor-pointer w-full overflow-hidden rounded-full border-[3px] border-brand-cream bg-white shadow-sm">
                                             <img
                                                 src={cat.image}
                                                 alt={cat.name}
@@ -213,12 +218,12 @@ const FeaturedCategories = () => {
                         })}
                     </div>
 
-                    {/* ✅ Arrows — only show if scrollable */}
+                   
                     {canScrollLeft && (
                         <button
                             onClick={() => scrollBy(-1)}
                             aria-label="Scroll left"
-                            className="absolute -left-4 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-brand-navy shadow-md transition hover:border-brand-orange hover:text-brand-orange lg:flex"
+                            className="cursor-pointer absolute -left-4 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-brand-navy shadow-md transition hover:border-brand-orange hover:text-brand-orange lg:flex"
                         >
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
@@ -229,7 +234,7 @@ const FeaturedCategories = () => {
                         <button
                             onClick={() => scrollBy(1)}
                             aria-label="Scroll right"
-                            className="absolute -right-4 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-brand-navy shadow-md transition hover:border-brand-orange hover:text-brand-orange lg:flex"
+                            className="cursor-pointer absolute -right-4 top-1/2 z-20 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-line bg-white text-brand-navy shadow-md transition hover:border-brand-orange hover:text-brand-orange lg:flex"
                         >
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />

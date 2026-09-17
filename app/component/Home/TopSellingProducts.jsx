@@ -1,8 +1,10 @@
 "use client";
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 
 const TABS = ['Today', 'This Week', 'This Month'];
+const slugify = (value) => value.toLowerCase().trim().replace(/\s+/g, '-');
 
 const BASE_PRODUCTS = [
     {
@@ -107,7 +109,11 @@ const TopSellingProducts = () => {
                                 </span>
 
                               
-                                <div className="relative z-10 h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-brand-cream sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-48 lg:w-48">
+                                <Link
+                                    href={`/category/product/${slugify(product.name)}-1`}
+                                    aria-label={`View ${product.name} details`}
+                                    className="relative z-10 h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-brand-cream sm:h-28 sm:w-28 md:h-32 md:w-32 lg:h-48 lg:w-48"
+                                >
                                     <img
                                         src={product.image}
                                         alt={product.name}
@@ -118,10 +124,13 @@ const TopSellingProducts = () => {
                                             🔥
                                         </span>
                                     )}
-                                </div>
+                                </Link>
 
                                 {/* Info */}
-                                <div className="relative z-10 min-w-0 flex-1">
+                                <Link
+                                    href={`/category/product/${slugify(product.name)}-1`}
+                                    className="relative z-10 min-w-0 flex-1"
+                                >
                                     <div className="flex items-center gap-2">
                                         <span className="text-[10px] font-semibold uppercase tracking-wide text-brand-teal">
                                             {product.category}
@@ -158,7 +167,7 @@ const TopSellingProducts = () => {
                                             style={{ width: `${pct}%` }}
                                         />
                                     </div>
-                                </div>
+                                </Link>
 
                                 {/* Price + action */}
                                 <div className="relative z-10 flex shrink-0 flex-col items-end gap-3">

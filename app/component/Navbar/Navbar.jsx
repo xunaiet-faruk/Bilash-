@@ -2,6 +2,8 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Logo from '../../../public/images/Logo.png';
+
 
 const NAV_LINKS = [
     { label: 'Shop', href: '/' },
@@ -17,14 +19,9 @@ const Navbar = () => {
 
     return (
         <header className="sticky top-0 z-50  backdrop-blur">
-            <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
-                <Link href="/" className="flex shrink-0 items-center gap-2">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-brand-navy font-display text-lg font-bold text-brand-orange">
-                        B
-                    </span>
-                    <span className="hidden font-display text-xl font-bold tracking-tight text-brand-navy sm:block">
-                        Bilash
-                    </span>
+            <div className="mx-auto flex h-20 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-0">
+                <Link href="/">
+                <img className="w-32" src="/images/Logo.png" alt="Bilash Logo" />
                 </Link>
 
                 <div className="hidden flex-1 justify-center md:flex">

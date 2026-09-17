@@ -11,6 +11,7 @@ import {
 } from 'react-icons/fa6';
 import payfooter from '../../../public/images/payfooter.png';
 
+
 const FOOTER_COLUMNS = [
     {
         title: 'Shop',
@@ -36,7 +37,7 @@ const SOCIALS = [
 
 const Footer = () => {
     return (
-        <footer className="border-t border-line bg-brand-navy text-white/70">
+        <footer className="border-t border-line bg-brand-navy text-white/70 container mx-auto">
             <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
                 <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-5">
                     {/* Brand + socials */}
