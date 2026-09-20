@@ -25,6 +25,9 @@ export default function CartDrawer({
   const pausedRef = useRef(false);
 
   const inCartIds = new Set(items.map((i) => i.id));
+  const itemCount = items.reduce((sum, i) => sum + i.qty, 0);
+  // Cart faka thakle "You May Also Like" dekhabe na (Ghorer Bazar er moto)
+  const showSuggestions = items.length > 0 && suggestions.length > 0;
 
   // Escape diye close + drawer khola thakle page scroll bondho
   useEffect(() => {
@@ -42,7 +45,7 @@ export default function CartDrawer({
 
   // ===== Infinite Auto Slide =====
   useEffect(() => {
-    if (!open || suggestions.length === 0) return;
+    if (!open || !showSuggestions) return;
     const slider = sliderRef.current;
     if (!slider) return;
 
@@ -78,7 +81,7 @@ export default function CartDrawer({
 
     rafId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(rafId);
-  }, [open, suggestions]);
+  }, [open, showSuggestions, suggestions]);
 
   const pauseAuto = () => (pausedRef.current = true);
   const resumeAuto = () => (pausedRef.current = false);
@@ -139,16 +142,21 @@ export default function CartDrawer({
         </div>
 
         {/* Scroll area: cart items + You May Also Like */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex flex-1 flex-col overflow-y-auto">
           {items.length === 0 ? (
-            <div className="flex flex-col items-center gap-2 px-6 py-12 text-center">
-              <p className="text-lg font-medium text-gray-800">No items in your cart!</p>
-              <button onClick={onClose} className="text-sm font-medium text-orange-600 hover:underline">
-                Continue shopping
-              </button>
+            // Faka cart: shudhu illustration + text, r kichu na
+            <div className="my-auto flex flex-col items-center px-6 py-12 text-center">
+              <div className="flex h-28 w-28 items-center justify-center rounded-full bg-orange-50">
+                <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-orange-400" aria-hidden="true">
+                  <circle cx="9" cy="20" r="1.5" />
+                  <circle cx="18" cy="20" r="1.5" />
+                  <path d="M2 3h3l2.4 12.2a1 1 0 0 0 1 .8h9.7a1 1 0 0 0 1-.8L21 7H6" />
+                </svg>
+              </div>
+              <p className="mt-5 text-lg font-semibold text-gray-800">No items in your cart!</p>
             </div>
           ) : (
-            <ul className="divide-y divide-gray-100 px-5">
+            <ul className="shrink-0 divide-y divide-gray-100 px-5">
               {items.map((item) => (
                 <li key={item.id} className="flex gap-3 py-4">
                   {/* Image thakle image, na thakle emoji */}
@@ -204,8 +212,8 @@ export default function CartDrawer({
           )}
 
           {/* You May Also Like: infinite auto sliding carousel */}
-          {suggestions.length > 0 && (
-            <section className="mt-2 border-t border-gray-200 bg-gray-50 py-4" aria-labelledby="also-like-title">
+          {showSuggestions && (
+            <section className="mt-2 shrink-0 border-t border-gray-200 bg-gray-50 py-4" aria-labelledby="also-like-title">
               <div className="mb-3 flex items-center justify-between px-5">
                 <h3 id="also-like-title" className="text-base font-semibold text-gray-900">
                   You May Also Like
@@ -280,30 +288,33 @@ export default function CartDrawer({
           )}
         </div>
 
-        {/* Footer */}
+        {/* Footer: shudhu ekta Checkout button */}
         {items.length > 0 && (
-          <div className="border-t border-gray-200 bg-white px-5 py-4">
-            <div className="mb-1 flex items-center justify-between">
-              <span className="text-sm text-gray-600">Subtotal</span>
-              <span className="text-lg font-bold text-gray-900">{money(subtotal, 2)}</span>
-            </div>
-            <p className="mb-4 text-xs text-gray-500">Delivery charge is added at checkout.</p>
-            <div className="grid grid-cols-2 gap-3">
-              <Link
-                href="/cart"
-                onClick={onClose}
-                className="rounded-lg border border-orange-500 py-2.5 text-center text-sm font-semibold text-orange-600 hover:bg-orange-50"
-              >
-                View cart
-              </Link>
-              <Link
-                href="/checkout"
-                onClick={onClose}
-                className="rounded-lg bg-orange-500 py-2.5 text-center text-sm font-semibold text-white hover:bg-orange-600"
-              >
+          <div className="border-t border-gray-200 bg-white px-5 pb-[max(1rem,env(safe-area-inset-bottom))] pt-4">
+            <Link
+              href="/checkout"
+              onClick={onClose}
+              className="group flex w-full items-center justify-between rounded-2xl bg-gradient-to-r from-orange-500 to-orange-600 p-1.5 pl-5 text-white shadow-lg shadow-orange-500/30 transition hover:shadow-xl hover:shadow-orange-500/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-orange-600"
+            >
+              {/* Bam pash: item count + subtotal */}
+              <span className="flex flex-col text-left leading-tight">
+                <span className="text-[11px] font-medium text-white/80">
+                  {itemCount} {itemCount === 1 ? "item" : "items"} · Subtotal
+                </span>
+                <span className="text-lg font-bold">{money(subtotal, 2)}</span>
+              </span>
+
+              {/* Dan pash: white Checkout pill */}
+              <span className="flex items-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-bold text-orange-600 transition-transform group-active:scale-95">
                 Checkout
-              </Link>
-            </div>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="transition-transform duration-200 group-hover:translate-x-1" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" />
+                </svg>
+              </span>
+            </Link>
+            <p className="mt-2.5 text-center text-xs text-gray-500">
+              Delivery charge is added at checkout.
+            </p>
           </div>
         )}
       </aside>
