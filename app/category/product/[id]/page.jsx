@@ -3,6 +3,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
+import { useCart } from '@/app/component/shared/Cartcontext';
 
 const COLOR_SWATCHES = ['#12203D', '#FF5A1F', '#0FA98A', '#E7E1D6'];
 const BRANDS = ['Xiaomi', 'Samsung', 'Anker', 'JBL', 'Philips', 'Logitech'];
@@ -342,6 +343,7 @@ const ProductDetails = () => {
     const [wishlisted, setWishlisted] = useState(false);
     const [addedPulse, setAddedPulse] = useState(false);
     const [justAddedId, setJustAddedId] = useState(null);
+    const { addItem } = useCart();
 
     const totalPrice = product.price * quantity;
     const animatedTotal = useCountUp(totalPrice);
@@ -352,11 +354,13 @@ const ProductDetails = () => {
     }, [id]);
 
     const handleAddToCart = () => {
+        addItem(product, quantity);
         setAddedPulse(true);
         setTimeout(() => setAddedPulse(false), 900);
     };
 
     const handleFeatureAdd = (p) => {
+        addItem(p);
         setJustAddedId(p.id);
         setTimeout(() => setJustAddedId(null), 1200);
     };

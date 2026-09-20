@@ -46,44 +46,44 @@ export default function CartDrawer({
     const slider = sliderRef.current;
     if (!slider) return;
 
-    // Duplicate items for seamless infinite loop
-    const originalCount = suggestions.length;
     const cardWidth = 150 + 12; // w-[150px] + gap-3 (12px)
-    const totalOriginalWidth = cardWidth * originalCount;
+    const totalOriginalWidth = cardWidth * suggestions.length;
+    const speed = 0.6; // px per frame (~36px/sec at 60fps)
 
-    // Start at the beginning of the duplicated set (middle)
-    // We render 3 sets: [clone][original][clone] for seamless looping
+    // Position ta nijer variable e rakhi (decimal shoho). Browser kono kono
+    // screen e scrollLeft integer e kete dey, tai 0.6px kore barano stuck hoye jete pare.
+    let pos = slider.scrollLeft;
     let rafId;
     let lastTime = performance.now();
-    const speed = 0.6; // px per frame (~36px/sec at 60fps)
 
     const step = (now) => {
       const delta = now - lastTime;
       lastTime = now;
 
-      if (!pausedRef.current) {
-        slider.scrollLeft += (speed * delta) / 16.67;
+      if (pausedRef.current) {
+        // Hover/touch/arrow click: user nijer moto scroll korle ekhan theke continue
+        pos = slider.scrollLeft;
+      } else {
+        pos += (speed * delta) / 16.67;
 
-        // Reset to the start of the middle set when we've scrolled one full set
-        if (slider.scrollLeft >= totalOriginalWidth * 2) {
-          slider.scrollLeft -= totalOriginalWidth;
-        } else if (slider.scrollLeft <= 0) {
-          slider.scrollLeft += totalOriginalWidth;
-        }
+        // 3 ta copy: [clone][original][clone]. Ek set porjonto gele pichone jump
+        if (pos >= totalOriginalWidth * 2) pos -= totalOriginalWidth;
+        else if (pos <= 0) pos += totalOriginalWidth;
+
+        slider.scrollLeft = pos;
       }
 
       rafId = requestAnimationFrame(step);
     };
 
     rafId = requestAnimationFrame(step);
-
     return () => cancelAnimationFrame(rafId);
   }, [open, suggestions]);
 
   const pauseAuto = () => (pausedRef.current = true);
   const resumeAuto = () => (pausedRef.current = false);
 
-  // Manual arrow slide (pauses auto briefly)
+  // Manual arrow slide (auto ektu pause hoy)
   const slide = (dir) => {
     const slider = sliderRef.current;
     if (!slider) return;
@@ -96,9 +96,8 @@ export default function CartDrawer({
   };
 
   // Triple the suggestions for seamless infinite loop
-  const loopedSuggestions = suggestions.length > 0
-    ? [...suggestions, ...suggestions, ...suggestions]
-    : [];
+  const loopedSuggestions =
+    suggestions.length > 0 ? [...suggestions, ...suggestions, ...suggestions] : [];
 
   return (
     <div
@@ -152,8 +151,13 @@ export default function CartDrawer({
             <ul className="divide-y divide-gray-100 px-5">
               {items.map((item) => (
                 <li key={item.id} className="flex gap-3 py-4">
-                  <div className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-orange-50 text-3xl">
-                    {item.emoji}
+                  {/* Image thakle image, na thakle emoji */}
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-lg bg-orange-50 text-3xl">
+                    {item.image ? (
+                      <img src={item.image} alt="" className="h-full w-full object-cover" />
+                    ) : (
+                      item.emoji
+                    )}
                   </div>
 
                   <div className="min-w-0 flex-1">
@@ -238,8 +242,12 @@ export default function CartDrawer({
                       key={`${p.id}-${idx}`}
                       className="w-[150px] shrink-0 overflow-hidden rounded-xl border border-gray-200 bg-white"
                     >
-                      <div className="flex h-24 items-center justify-center bg-orange-50 text-5xl">
-                        {p.emoji}
+                      <div className="flex h-24 items-center justify-center overflow-hidden bg-orange-50 text-5xl">
+                        {p.image ? (
+                          <img src={p.image} alt={p.name} className="h-full w-full object-cover" />
+                        ) : (
+                          p.emoji
+                        )}
                       </div>
                       <div className="p-2.5">
                         <p className="line-clamp-2 h-8 text-xs font-medium leading-4 text-gray-900">

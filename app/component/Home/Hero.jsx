@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react';
+import { useCart } from '@/app/component/shared/Cartcontext';
 
 const SLIDES = [
   {
@@ -226,7 +227,16 @@ const Hero = () => {
 };
 
 // ✅ Reusable product content — prev + current dutar jonno
-const ProductContent = ({ product }) => (
+const ProductContent = ({ product }) => {
+  const { addItem } = useCart();
+  const cartProduct = {
+    ...product,
+    id: product.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+    price: Number(String(product.price).replace(/[^0-9.-]/g, '')) || 0,
+    oldPrice: Number(String(product.oldPrice).replace(/[^0-9.-]/g, '')) || null,
+  };
+
+  return (
   <>
     <div className="relative h-40 w-full overflow-hidden sm:h-44 md:h-48">
       <img src={product.image} alt={product.name} className="h-full w-full object-cover" />
@@ -257,11 +267,15 @@ const ProductContent = ({ product }) => (
           <span className="text-xs text-ink/40 line-through">{product.oldPrice}</span>
         </div>
       </div>
-      <button className="mt-3 w-full rounded-full bg-brand-navy py-2.5 text-sm font-semibold text-white transition hover:bg-brand-navy-light">
+      <button
+        onClick={() => addItem(cartProduct)}
+        className="mt-3 w-full rounded-full bg-brand-navy py-2.5 text-sm font-semibold text-white transition hover:bg-brand-navy-light"
+      >
         Add to cart
       </button>
     </div>
   </>
-);
+  );
+};
 
 export default Hero;

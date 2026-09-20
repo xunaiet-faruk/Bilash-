@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useCart } from '@/app/component/shared/Cartcontext';
 
 const TABS = ['Today', 'This Week', 'This Month'];
 const slugify = (value) => value.toLowerCase().trim().replace(/\s+/g, '-');
@@ -65,6 +66,7 @@ const BASE_PRODUCTS = [
 
 const TopSellingProducts = () => {
     const [activeTab, setActiveTab] = useState('Today');
+    const { addItem } = useCart();
 
     const ranked = [...BASE_PRODUCTS].sort(
         (a, b) => b.sold[activeTab] - a.sold[activeTab]
@@ -181,6 +183,13 @@ const TopSellingProducts = () => {
                                         </p>
                                     </div>
                                     <button
+                                        type="button"
+                                        onClick={() => addItem({
+                                            ...product,
+                                            id: slugify(product.name),
+                                            price: Number(product.price.replace(/[^0-9.-]/g, '')) || 0,
+                                            oldPrice: Number(product.oldPrice.replace(/[^0-9.-]/g, '')) || null,
+                                        })}
                                         aria-label={`Add ${product.name} to cart`}
                                         className="flex cursor-pointer h-11 w-11 items-center justify-center rounded-full bg-brand-navy text-white transition hover:bg-brand-orange sm:h-12 sm:w-12"
                                     >
