@@ -10,6 +10,7 @@ const BRANDS = ['Xiaomi', 'Samsung', 'Anker', 'JBL', 'Philips', 'Logitech'];
 const STORE_PHONE_DISPLAY = '+880 1XXX-XXXXXX';
 const STORE_PHONE_TEL = '+8801XXXXXXXXX';
 const STORE_WHATSAPP = '8801XXXXXXXXX';
+const formatMoney = (value) => value.toLocaleString('en-BD');
 
 const IMAGE_POOL = [
     'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=800&q=80',
@@ -311,7 +312,7 @@ const FeatureProductCard = ({ product, onAddToCart, justAddedId }) => (
                 <span className="text-[10px] text-ink/40">({product.reviews})</span>
             </div>
             <p className="mt-1.5 font-display text-sm font-bold text-brand-navy">
-                ৳{product.price.toLocaleString()}
+                ৳{formatMoney(product.price)}
             </p>
         </Link>
         <button
@@ -366,7 +367,7 @@ const ProductDetails = () => {
     };
 
     const whatsappHref = `https://wa.me/${STORE_WHATSAPP}?text=${encodeURIComponent(
-        `Hi, I want to order: ${product.name} (Qty: ${quantity}) — ৳${totalPrice.toLocaleString()}`
+        `Hi, I want to order: ${product.name} (Qty: ${quantity}) — ৳${formatMoney(totalPrice)}`
     )}`;
     const callHref = `tel:${STORE_PHONE_TEL}`;
 
@@ -437,12 +438,12 @@ const ProductDetails = () => {
                         {/* Unit price */}
                         <div className="mt-5 flex items-baseline gap-3 border-y border-line py-5">
                             <span className="font-display text-2xl font-bold text-brand-navy">
-                                ৳{product.price.toLocaleString()}
+                                ৳{formatMoney(product.price)}
                             </span>
                             {product.oldPrice && (
                                 <>
                                     <span className="text-base text-ink/40 line-through">
-                                        ৳{product.oldPrice.toLocaleString()}
+                                        ৳{formatMoney(product.oldPrice)}
                                     </span>
                                     <span className="rounded-full bg-brand-orange/10 px-2.5 py-1 text-xs font-bold text-brand-orange">
                                         Save {Math.round((1 - product.price / product.oldPrice) * 100)}%
@@ -498,7 +499,7 @@ const ProductDetails = () => {
                                     className="font-display text-2xl font-bold text-brand-navy"
                                     style={{ animation: 'priceFlash 0.4s ease-out both' }}
                                 >
-                                    ৳{Math.round(animatedTotal).toLocaleString()}
+                                    ৳{formatMoney(Math.round(animatedTotal))}
                                 </p>
                             </div>
                         </div>

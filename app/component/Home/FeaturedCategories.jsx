@@ -6,7 +6,6 @@ import React, { useEffect, useRef, useState } from 'react';
 const FILTERS = ['All', 'Electronics', 'Fashion', 'Home', 'Beauty', 'Kids'];
 const slugify = (name) => name.toLowerCase().trim().replace(/\s+/g, '-');
 
-
 const CATEGORIES = [
     { name: 'T-Shirt', group: 'Fashion', image: 'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&q=80', tag: 'New' },
     { name: 'Headphone', group: 'Electronics', image: 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=400&q=80' },
@@ -35,7 +34,6 @@ const FeaturedCategories = () => {
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(true);
     const router = useRouter();
-
 
     const visible =
         activeFilter === 'All'
@@ -69,11 +67,10 @@ const FeaturedCategories = () => {
         const id = setInterval(() => {
             const card = el.querySelector('[data-card]');
             if (!card) return;
-            const step = card.offsetWidth + 20; // card + gap
+            const step = card.offsetWidth + 20;
             const maxScroll = el.scrollWidth - el.clientWidth;
 
             if (el.scrollLeft >= maxScroll - 4) {
-                // sesh e pouche gele abar shuru te jabe
                 el.scrollTo({ left: 0, behavior: 'smooth' });
             } else {
                 el.scrollBy({ left: step, behavior: 'smooth' });
@@ -96,20 +93,16 @@ const FeaturedCategories = () => {
         el.scrollBy({ left: dir * step, behavior: 'smooth' });
     };
 
-   
-
-     const handleCategoryClick = (cat) => {
+    const handleCategoryClick = (cat) => {
         setActiveCategory(cat.name);
         router.push(`/category/${slugify(cat.name)}`);
-       
-    }
+    };
 
     return (
-        <section className=" px-4 py-20 sm:px-6 lg:px-8">
+        <section className="px-4 py-20 sm:px-6 lg:px-8">
             <style>{`
                 .no-scrollbar::-webkit-scrollbar { display: none; }
                 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
                 @keyframes catIn {
                     from { opacity: 0; transform: translateY(8px); }
                     to   { opacity: 1; transform: translateY(0); }
@@ -117,10 +110,8 @@ const FeaturedCategories = () => {
             `}</style>
 
             <div className="mx-auto max-w-7xl">
-                {/* Header + Filter */}
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                     <div>
-                     
                         <h2 className="mt-1 font-display text-2xl font-bold text-brand-navy sm:text-3xl">
                             Find what you're looking for
                         </h2>
@@ -143,7 +134,6 @@ const FeaturedCategories = () => {
                     </div>
                 </div>
 
-                {/* Rail */}
                 <div
                     className="relative mt-8"
                     onMouseEnter={() => setIsPaused(true)}
@@ -151,15 +141,13 @@ const FeaturedCategories = () => {
                     onTouchStart={() => setIsPaused(true)}
                     onTouchEnd={() => setIsPaused(false)}
                 >
-                
-                    {/* Scroll container */}
                     <div
                         ref={scrollRef}
                         className="no-scrollbar flex gap-5 overflow-x-auto px-1 py-2"
                         style={{
                             scrollSnapType: 'x mandatory',
-                            scrollbarWidth: 'none',    
-                            msOverflowStyle: 'none',     
+                            scrollbarWidth: 'none',
+                            msOverflowStyle: 'none',
                         }}
                     >
                         {visible.map((cat, idx) => {
@@ -176,7 +164,6 @@ const FeaturedCategories = () => {
                                         animation: `catIn 0.4s ease-out ${idx * 0.03}s both`,
                                     }}
                                 >
-                                    {/* Ring + Image — */}
                                     <div
                                         className={`relative aspect-square w-full rounded-full p-[3px] transition-all duration-300 ${
                                             isActive
@@ -218,7 +205,6 @@ const FeaturedCategories = () => {
                         })}
                     </div>
 
-                   
                     {canScrollLeft && (
                         <button
                             onClick={() => scrollBy(-1)}
@@ -242,14 +228,10 @@ const FeaturedCategories = () => {
                         </button>
                     )}
 
-                    {/* ✅ Auto-slide progress bar (optional, subtle) */}
                     <div className="mt-6 flex justify-center">
                         <div className="flex gap-1.5">
                             {visible.map((_, i) => (
-                                <span
-                                    key={i}
-                                    className="h-1 w-1 rounded-full bg-ink/15"
-                                />
+                                <span key={i} className="h-1 w-1 rounded-full bg-ink/15" />
                             ))}
                         </div>
                     </div>
