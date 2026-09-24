@@ -67,7 +67,7 @@ const Navbar = () => {
                         );
                     })}
                     <Link
-                        href="/account"
+                        href="/login"
                         className="ml-2 rounded-full bg-brand-navy px-4 py-2 text-sm font-semibold text-white transition hover:bg-brand-navy-light"
                     >
                         Sign in
@@ -121,7 +121,7 @@ const Navbar = () => {
                             );
                         })}
                         <Link
-                            href="/account"
+                            href="/login"
                             className="mt-2 rounded-full bg-brand-navy px-4 py-2.5 text-center text-sm font-semibold text-white"
                         >
                             Sign in

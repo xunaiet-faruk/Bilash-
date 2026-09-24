@@ -1,8 +1,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "./component/Navbar/Navbar";
-import Footer from "./component/Footer/Footer";
-import FloatingCart from "./component/shared/FloatingCart";
+import AppShell from "./component/AppShell";
 import { CartProvider } from "./component/shared/Cartcontext";
 
 const geistSans = Geist({
@@ -29,10 +27,7 @@ export default function RootLayout({ children }) {
 >
   <body suppressHydrationWarning className="min-h-full flex flex-col">
     <CartProvider>
-      <Navbar />
-      {children}
-      <FloatingCart />
-      <Footer />
+      <AppShell>{children}</AppShell>
     </CartProvider>
   </body>
 </html>
