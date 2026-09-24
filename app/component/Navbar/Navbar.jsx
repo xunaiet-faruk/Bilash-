@@ -11,6 +11,7 @@ const NAV_LINKS = [
     { label: 'Become a Reseller', href: '/reseller' },
     { label: 'Affiliate', href: '/affiliate' },
     { label: 'Sell on Bazario', href: '/seller' },
+    { label: 'Profile', href: '/customer' },
 ];
 
 const Navbar = () => {
@@ -50,8 +51,9 @@ const Navbar = () => {
                     {NAV_LINKS.map((link) => {
                         const isActive = active === link.label;
                         return (
-                            <button
+                            <Link
                                 key={link.label}
+                                href={link.href}
                                 onClick={() => setActive(link.label)}
                                 className={`relative px-3 py-2 text-sm font-medium transition-colors ${
                                     isActive ? 'text-brand-orange' : 'text-brand-navy hover:text-brand-orange'
@@ -63,7 +65,7 @@ const Navbar = () => {
                                         isActive ? 'scale-x-100' : 'scale-x-0'
                                     }`}
                                 />
-                            </button>
+                            </Link>
                         );
                     })}
                     <Link
@@ -106,8 +108,9 @@ const Navbar = () => {
                         {NAV_LINKS.map((link) => {
                             const isActive = active === link.label;
                             return (
-                                <button
+                                <Link
                                     key={link.label}
+                                    href={link.href}
                                     onClick={() => {
                                         setActive(link.label);
                                         setMenuOpen(false);
@@ -117,7 +120,7 @@ const Navbar = () => {
                                     }`}
                                 >
                                     {link.label}
-                                </button>
+                                </Link>
                             );
                         })}
                         <Link

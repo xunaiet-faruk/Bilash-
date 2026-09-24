@@ -1,0 +1,1 @@
+export const resellerStats = [{ label: "Store sales", value: "$9,840", trend: "+11.6%" }, { label: "Orders", value: "218", trend: "+7.4%", accent: "teal" }, { label: "Wallet balance", value: "$2,480", trend: "+18.0%" }, { label: "Profit", value: "$1,920", trend: "+5.8%", accent: "teal" }];

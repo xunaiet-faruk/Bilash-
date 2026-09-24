@@ -1,0 +1,2 @@
+export const sellerStats = [{ label: "Revenue", value: "$18,420", trend: "+14.2%" }, { label: "Orders", value: "426", trend: "+9.1%", accent: "teal" }, { label: "Products", value: "86", trend: "+4.0%" }, { label: "Rating", value: "4.8 / 5", trend: "+0.2", accent: "teal" }];
+export const sellerOrders = [{ id: "#SO-408", customer: "Rafi Ahmed", total: "$72.00", status: "paid" }, { id: "#SO-407", customer: "Sara Lee", total: "$145.00", status: "processing" }];

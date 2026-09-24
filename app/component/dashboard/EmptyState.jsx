@@ -1,0 +1,1 @@
+export default function EmptyState({ title = "Nothing here yet", description = "New activity will appear here when it is available." }) { return <div className="rounded-xl border border-dashed border-line bg-white px-6 py-14 text-center"><h3 className="font-semibold text-brand-navy">{title}</h3><p className="mt-2 text-sm text-slate-500">{description}</p></div>; }

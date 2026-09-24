@@ -1,0 +1,2 @@
+export const adminStats = [{ label: "Total sales", value: "$48,290", trend: "+12.8%" }, { label: "Orders", value: "1,284", trend: "+8.4%", accent: "teal" }, { label: "Customers", value: "8,642", trend: "+6.2%" }, { label: "Pending payouts", value: "$12,480", trend: "+3.1%", accent: "teal" }];
+export const adminOrders = [{ id: "#BL-1048", customer: "Amina Rahman", total: "$128.00", status: "delivered" }, { id: "#BL-1047", customer: "Nabil Hasan", total: "$84.50", status: "processing" }, { id: "#BL-1046", customer: "Maya Chen", total: "$219.00", status: "pending" }];

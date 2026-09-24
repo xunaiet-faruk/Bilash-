@@ -1,0 +1,1 @@
+export const affiliateStats = [{ label: "Clicks", value: "24,840", trend: "+18.2%" }, { label: "Conversions", value: "642", trend: "+12.4%", accent: "teal" }, { label: "Commission", value: "$3,280", trend: "+9.8%" }, { label: "Pending payout", value: "$820", trend: "+4.1%", accent: "teal" }];
