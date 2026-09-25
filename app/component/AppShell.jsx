@@ -10,8 +10,9 @@ const AUTH_PATHS = ["/login", "/register"];
 export default function AppShell({ children }) {
   const pathname = usePathname();
   const isAuthPage = AUTH_PATHS.includes(pathname);
+  const isDashboardPage = pathname === "/dashboard" || pathname.startsWith("/admin") || pathname.startsWith("/reseller");
 
-  if (isAuthPage) {
+  if (isAuthPage || isDashboardPage) {
     return children;
   }
 

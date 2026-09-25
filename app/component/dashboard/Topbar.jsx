@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 const Topbar = ({ title, user = { name: 'User', role: 'Member' } }) => {
     const [open, setOpen] = useState(false);
+    const router = useRouter();
 
     return (
         <header className="flex h-16 items-center justify-between border-b border-line bg-white px-4 sm:px-6">
@@ -40,7 +42,12 @@ const Topbar = ({ title, user = { name: 'User', role: 'Member' } }) => {
 
                     {open && (
                         <div className="absolute right-0 mt-2 w-44 overflow-hidden rounded-xl border border-line bg-white shadow-lg">
-                            <button className="block w-full px-4 py-2.5 text-left text-sm text-ink/70 hover:bg-brand-cream">Profile</button>
+                            <button
+                                onClick={() => router.push('/dashboard')}
+                                className="block w-full px-4 py-2.5 text-left text-sm text-ink/70 hover:bg-brand-cream"
+                            >
+                                Profile
+                            </button>
                             <button className="block w-full px-4 py-2.5 text-left text-sm text-ink/70 hover:bg-brand-cream">Settings</button>
                             <button className="block w-full border-t border-line px-4 py-2.5 text-left text-sm text-red-500 hover:bg-red-50">Log out</button>
                         </div>

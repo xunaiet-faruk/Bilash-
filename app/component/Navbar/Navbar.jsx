@@ -9,9 +9,7 @@ const NAV_LINKS = [
     { label: 'Shop', href: '/' },
     { label: 'China Direct', href: '/china-direct' },
     { label: 'Become a Reseller', href: '/reseller' },
-    { label: 'Affiliate', href: '/affiliate' },
-    { label: 'Sell on Bazario', href: '/seller' },
-    { label: 'Profile', href: '/customer' },
+    { label: 'Dashboard', href: '/dashboard' },
 ];
 
 const Navbar = () => {
