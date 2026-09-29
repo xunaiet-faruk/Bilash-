@@ -1119,7 +1119,7 @@ export default function CatalogApprovalsPage() {
                   <button className="cursor-pointer rounded-xl border border-slate-200 bg-white px-3 py-2.5 text-xs font-semibold text-slate-600 shadow-sm transition-all hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md">
                     Flag
                   </button>
-                  <button className="col-span-2 cursor-pointer rounded-xl bg-gradient-to-r from-emerald-500 to-emerald-600 px-3 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-500/30 transition-transform hover:scale-[1.02] active:scale-[0.98]">
+                  <button className="col-span-2 cursor-pointer rounded-xl bg-gradient-to-r from-orange-500 to-orange-600  px-3 py-2.5 text-xs font-semibold text-white shadow-lg shadow-emerald-500/30 transition-transform hover:scale-[1.02] active:scale-[0.98]">
                     ✓ Approve product
                   </button>
                 </div>
