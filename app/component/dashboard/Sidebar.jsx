@@ -83,7 +83,7 @@ const NAV = {
         { label: "My Catalog", href: "/catalog", icon: Package },
         { label: "Margin Calculator", href: "/margin", icon: BarChart2 },
         { label: "Share Links", href: "/share-link", icon: Share2 },
-        { label: "My Store", href: "/store", icon: ShoppingBag },
+        { label: "My-products", href: "/my-products", icon: ShoppingBag },
       ],
     },
     {
