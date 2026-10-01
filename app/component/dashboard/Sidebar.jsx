@@ -3,170 +3,69 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import {
+  Home,
+  BarChart2,
+  Package,
+  Tag,
+  Receipt,
+  CreditCard,
+  Globe,
+  Truck,
+  Shield,
+  Users,
+  ShoppingBag,
+  Star,
+  LifeBuoy,
+  Settings,
+  Share2,
+  User,
+  ChevronDown,
+} from "lucide-react";
 
 /* ============================================================
-   ICONS
-   ============================================================ */
-function HomeIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M4 11.5 12 4l8 7.5" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M6 10v9h12v-9" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function BoxIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M3.3 7 12 12l8.7-5M12 12v9M3.3 7 12 3l8.7 4v10L12 21l-8.7-4Z" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function TagIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M20.6 12.3 12.7 20.2a1.5 1.5 0 0 1-2.1 0l-6.8-6.8a1.5 1.5 0 0 1 0-2.1L11.8 3.4H19a1.6 1.6 0 0 1 1.6 1.6z" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="15.5" cy="8.5" r="1.3" />
-    </svg>
-  );
-}
-function ReceiptIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z" strokeLinejoin="round" />
-      <path d="M9 8h6M9 12h6" strokeLinecap="round" />
-    </svg>
-  );
-}
-function UsersIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <circle cx="9" cy="8" r="3" />
-      <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" strokeLinecap="round" />
-      <path d="M16 4.3c1.7.4 3 2 3 3.9 0 1.9-1.3 3.5-3 3.9M21 20c0-2.8-2-5.1-4.7-5.8" strokeLinecap="round" />
-    </svg>
-  );
-}
-function StoreIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M4 9V5h16v4M4 9l1 11h14l1-11M4 9h16" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M9 21v-6h6v6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function WalletIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M3 7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7Z" strokeLinejoin="round" />
-      <path d="M15 12h4M15 12a1.5 1.5 0 0 0 0 3h4v-3" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function ChartIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M5 19V10M12 19V5M19 19v-7" strokeLinecap="round" />
-    </svg>
-  );
-}
-function StarIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="m12 3 2.6 5.6 6 .7-4.5 4.2 1.2 6-5.3-3-5.3 3 1.2-6-4.5-4.2 6-.7Z" strokeLinejoin="round" />
-    </svg>
-  );
-}
-function SupportIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <circle cx="12" cy="12" r="8.5" />
-      <circle cx="12" cy="12" r="3" />
-      <path d="M6.4 6.4 9.5 9.5M17.6 6.4 14.5 9.5M6.4 17.6 9.5 14.5M17.6 17.6 14.5 14.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-function SettingsIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <circle cx="12" cy="12" r="3.2" />
-      <path
-        d="M19.4 13.5a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.9 2.9l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6v.2a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.9-2.9l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1h-.2a2 2 0 1 1 0-4h.1A1.7 1.7 0 0 0 4.2 7.5a1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.9-2.9l.1.1a1.7 1.7 0 0 0 1.9.3h.1a1.7 1.7 0 0 0 1-1.6v-.2a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.9 2.9l-.1.1a1.7 1.7 0 0 0-.3 1.9v.1a1.7 1.7 0 0 0 1.6 1h.2a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.6 1Z"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-function TruckIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M3 7h11v10H3zM14 10h4l3 3v4h-7z" strokeLinecap="round" strokeLinejoin="round" />
-      <circle cx="7" cy="17" r="1.6" />
-      <circle cx="17" cy="17" r="1.6" />
-    </svg>
-  );
-}
-function GlobeIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M3 12h18M12 3a15 15 0 0 1 0 18M12 3a15 15 0 0 0 0 18" strokeLinecap="round" />
-    </svg>
-  );
-}
-function ShieldIcon(p) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" {...p}>
-      <path d="M12 3 4 6v6c0 5 3.5 8.5 8 9 4.5-.5 8-4 8-9V6l-8-3Z" strokeLinejoin="round" />
-      <path d="m9 12 2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-/* ============================================================
-   NAV CONFIG — SRS Section 3.5 অনুযায়ী
+   NAV CONFIG — SRS Section 3.5 অনুযায়ী
    ============================================================ */
 const NAV = {
   admin: [
     {
       group: "Overview",
       items: [
-        { label: "Global Dashboard", href: "", icon: HomeIcon },
-        { label: "Analytics", href: "/analytics", icon: ChartIcon },
+        { label: "Global Dashboard", href: "", icon: Home },
+        { label: "Analytics", href: "/analytics", icon: BarChart2 },
       ],
     },
     {
       group: "Commerce",
       items: [
-        { label: "Catalog & Approvals", href: "/catalog", icon: BoxIcon },
-        { label: "Categories", href: "/categories", icon: TagIcon },
-        { label: "Orders", href: "/orders", icon: ReceiptIcon },
-        { label: "Payout & Escrow", href: "/finance", icon: WalletIcon },
+        { label: "Catalog & Approvals", href: "/catalog", icon: Package },
+        { label: "Categories", href: "/categories", icon: Tag },
+        { label: "Orders", href: "/orders", icon: Receipt },
+        { label: "Payout & Escrow", href: "/finance", icon: CreditCard },
       ],
     },
     {
       group: "Operations",
       items: [
-        { label: "China Sourcing", href: "/china-sourcing", icon: GlobeIcon },
-        { label: "Courier & Logistics", href: "/logistics", icon: TruckIcon },
-        { label: "Fraud & Risk", href: "/security/fraud", icon: ShieldIcon },
+        { label: "China Sourcing", href: "/china-sourcing", icon: Globe },
+        { label: "Courier & Logistics", href: "/logistics", icon: Truck },
+        { label: "Fraud & Risk", href: "/security/fraud", icon: Shield },
       ],
     },
     {
       group: "People",
       items: [
-        { label: "Customers", href: "/customers", icon: UsersIcon },
-        { label: "Resellers", href: "/resellers", icon: StoreIcon },
-        { label: "Sellers", href: "/sellers", icon: StoreIcon },
+        { label: "Customers", href: "/customers", icon: Users },
+        { label: "Resellers", href: "/resellers", icon: ShoppingBag },
+        { label: "Sellers", href: "/sellers", icon: ShoppingBag },
       ],
     },
     {
       group: "System",
       items: [
-        { label: "Reviews", href: "/reviews", icon: StarIcon },
-        { label: "Support", href: "/support", icon: SupportIcon },
-        { label: "Settings", href: "/settings", icon: SettingsIcon },
+        { label: "Reviews", href: "/reviews", icon: Star },
+        { label: "Support", href: "/support", icon: LifeBuoy },
+        { label: "Settings", href: "/settings", icon: Settings },
       ],
     },
   ],
@@ -174,24 +73,24 @@ const NAV = {
     {
       group: "Overview",
       items: [
-        { label: "Dashboard", href: "", icon: HomeIcon },
-        { label: "Earnings", href: "/earnings", icon: ChartIcon },
+        { label: "Dashboard", href: "", icon: Home },
+        { label: "Wallet", href: "/wallet", icon: CreditCard },
       ],
     },
     {
-      group: "Commerce",
+      group: "Reseller",
       items: [
-        { label: "Wholesale Catalog", href: "/catalog", icon: BoxIcon },
-        { label: "My Orders", href: "/orders", icon: ReceiptIcon },
-        { label: "Wallet", href: "/wallet", icon: WalletIcon },
+        { label: "My Catalog", href: "/catalog", icon: Package },
+        { label: "Margin Calculator", href: "/margin", icon: BarChart2 },
+        { label: "Share Links", href: "/share-link", icon: Share2 },
+        { label: "My Store", href: "/store", icon: ShoppingBag },
       ],
     },
     {
-      group: "Other",
+      group: "Account",
       items: [
-        { label: "Reviews", href: "/reviews", icon: StarIcon },
-        { label: "Support", href: "/support", icon: SupportIcon },
-        { label: "Settings", href: "/settings", icon: SettingsIcon },
+        { label: "Profile", href: "/profile", icon: User },
+        { label: "Store Setup", href: "/setup", icon: Settings },
       ],
     },
   ],
@@ -304,7 +203,7 @@ const Sidebar = ({
                           : "text-white/40 group-hover:bg-white/[0.05] group-hover:text-white/70")
                       }
                     >
-                      <Icon className="h-[15px] w-[15px]" />
+                      {Icon && <Icon className="h-[15px] w-[15px]" />}
                     </span>
                     <span className="truncate">{label}</span>
                     {active && (
@@ -328,9 +227,7 @@ const Sidebar = ({
             <p className="truncate text-[13px] font-semibold text-white">{userName}</p>
             <p className="truncate text-[11px] text-white/40">{userEmail}</p>
           </div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" className="h-4 w-4 shrink-0 text-white/30 transition-colors group-hover:text-white/60">
-            <path d="m6 9 6 6 6-6" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
+          <ChevronDown className="h-4 w-4 shrink-0 text-white/30 transition-colors group-hover:text-white/60" />
         </div>
       </div>
     </aside>
