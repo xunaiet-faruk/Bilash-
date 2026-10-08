@@ -3,8 +3,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 // ==================== FAKE DATA ====================
-// আসল project এ এগুলো API থেকে আসবে (props দিয়ে পাঠালেই হবে)।
-// নিচের তারিখগুলো আজকের দিন ধরে বানানো, তাই "Today" / "Yesterday" ঠিকমতো দেখায়।
 const ago = (days, h = 12, m = 0) => {
   const d = new Date();
   d.setDate(d.getDate() - days);
@@ -16,44 +14,41 @@ const DEMO_WALLET = {
   available: 48320,
   withdrawn: 125000,
   minWithdraw: 500,
-  bank: { name: "Dutch-Bangla Bank", account: "****4567", verified: true },
+  bank: {
+    name: "Dutch-Bangla Bank",
+    account: "****4567",
+    verified: true,
+    holder: "SADIA ISLAM",
+    cardNumber: "4831 5567 8901 4567",
+    expiry: "09/27",
+    network: "VISA",
+  },
 };
 
 const DEMO_TRANSACTIONS = [
-  { id: "t1", type: "credit", source: "order", title: "Order #RS-1024", subtitle: "Wireless Earbuds Pro × 2", amount: 700, date: ago(0, 14, 20), status: "completed" },
-  { id: "t2", type: "credit", source: "order", title: "Order #RS-1023", subtitle: "Smart Watch Series 3 × 1", amount: 300, date: ago(0, 11, 5), status: "completed" },
-  { id: "t3", type: "credit", source: "order", title: "Order #RS-1022", subtitle: "Power Bank 10000mAh × 3", amount: 390, date: ago(1, 18, 40), status: "pending" },
-  { id: "t11", type: "credit", source: "order", title: "Order #RS-1025", subtitle: "Leather Laptop Bag × 4", amount: 2800, date: ago(1, 10, 15), status: "pending" },
-  { id: "t12", type: "credit", source: "order", title: "Order #RS-1026", subtitle: "LED Desk Lamp × 8", amount: 2500, date: ago(2, 16, 0), status: "pending" },
-  { id: "t4", type: "debit", source: "withdraw", title: "Withdrawal to bank", subtitle: "Dutch-Bangla Bank ****4567", amount: 10000, date: ago(3, 15, 30), status: "completed" },
-  { id: "t5", type: "credit", source: "bonus", title: "Referral bonus", subtitle: "New reseller joined via you", amount: 250, date: ago(4, 9, 45), status: "completed" },
-  { id: "t6", type: "credit", source: "order", title: "Order #RS-1021", subtitle: "Leather Laptop Bag × 2", amount: 500, date: ago(4, 13, 10), status: "completed" },
-  { id: "t7", type: "debit", source: "refund", title: "Customer refund", subtitle: "Order #RS-1015 returned", amount: 450, date: ago(5, 17, 25), status: "completed" },
-  { id: "t8", type: "credit", source: "order", title: "Order #RS-1020", subtitle: "LED Desk Lamp × 5", amount: 800, date: ago(6, 12, 0), status: "completed" },
-  { id: "t9", type: "credit", source: "order", title: "Order #RS-1019", subtitle: "Wireless Earbuds Pro × 4", amount: 1400, date: ago(7, 10, 30), status: "completed" },
-  { id: "t13", type: "credit", source: "order", title: "Order #RS-1018", subtitle: "Power Bank 10000mAh × 5", amount: 650, date: ago(9, 14, 0), status: "completed" },
-  { id: "t14", type: "credit", source: "order", title: "Order #RS-1017", subtitle: "Smart Watch Series 3 × 2", amount: 600, date: ago(10, 11, 40), status: "completed" },
-  { id: "t15", type: "credit", source: "order", title: "Order #RS-1016", subtitle: "LED Desk Lamp × 3", amount: 480, date: ago(11, 16, 15), status: "completed" },
-  { id: "t10", type: "debit", source: "withdraw", title: "Withdrawal to bank", subtitle: "Dutch-Bangla Bank ****4567", amount: 15000, date: ago(12, 15, 0), status: "completed" },
-  { id: "t16", type: "credit", source: "order", title: "Order #RS-1014", subtitle: "Wireless Earbuds Pro × 3", amount: 1050, date: ago(13, 12, 20), status: "completed" },
+  { id: "t1", type: "credit", source: "order", title: "Order #RS-1024", subtitle: "Wireless Earbuds Pro × 2", amount: 700, date: ago(0, 14, 20), status: "completed", method: "Wallet" },
+  { id: "t2", type: "credit", source: "order", title: "Order #RS-1023", subtitle: "Smart Watch Series 3 × 1", amount: 300, date: ago(0, 11, 5), status: "completed", method: "Wallet" },
+  { id: "t3", type: "credit", source: "order", title: "Order #RS-1022", subtitle: "Power Bank 10000mAh × 3", amount: 390, date: ago(1, 18, 40), status: "pending", method: "Wallet" },
+  { id: "t11", type: "credit", source: "order", title: "Order #RS-1025", subtitle: "Leather Laptop Bag × 4", amount: 2800, date: ago(1, 10, 15), status: "pending", method: "Wallet" },
+  { id: "t12", type: "credit", source: "order", title: "Order #RS-1026", subtitle: "LED Desk Lamp × 8", amount: 2500, date: ago(2, 16, 0), status: "pending", method: "Wallet" },
+  { id: "t4", type: "debit", source: "withdraw", title: "Withdrawal to bank", subtitle: "Dutch-Bangla Bank ****4567", amount: 10000, date: ago(3, 15, 30), status: "completed", method: "DBBL" },
+  { id: "t5", type: "credit", source: "bonus", title: "Referral bonus", subtitle: "New reseller joined via you", amount: 250, date: ago(4, 9, 45), status: "completed", method: "Bonus" },
+  { id: "t6", type: "credit", source: "order", title: "Order #RS-1021", subtitle: "Leather Laptop Bag × 2", amount: 500, date: ago(4, 13, 10), status: "completed", method: "Wallet" },
+  { id: "t7", type: "debit", source: "refund", title: "Customer refund", subtitle: "Order #RS-1015 returned", amount: 450, date: ago(5, 17, 25), status: "completed", method: "Refund" },
+  { id: "t8", type: "credit", source: "order", title: "Order #RS-1020", subtitle: "LED Desk Lamp × 5", amount: 800, date: ago(6, 12, 0), status: "completed", method: "Wallet" },
+  { id: "t9", type: "credit", source: "order", title: "Order #RS-1019", subtitle: "Wireless Earbuds Pro × 4", amount: 1400, date: ago(7, 10, 30), status: "completed", method: "Wallet" },
+  { id: "t13", type: "credit", source: "order", title: "Order #RS-1018", subtitle: "Power Bank 10000mAh × 5", amount: 650, date: ago(9, 14, 0), status: "completed", method: "Wallet" },
+  { id: "t14", type: "credit", source: "order", title: "Order #RS-1017", subtitle: "Smart Watch Series 3 × 2", amount: 600, date: ago(10, 11, 40), status: "completed", method: "Wallet" },
+  { id: "t15", type: "credit", source: "order", title: "Order #RS-1016", subtitle: "LED Desk Lamp × 3", amount: 480, date: ago(11, 16, 15), status: "completed", method: "Wallet" },
+  { id: "t10", type: "debit", source: "withdraw", title: "Withdrawal to bank", subtitle: "Dutch-Bangla Bank ****4567", amount: 15000, date: ago(12, 15, 0), status: "completed", method: "DBBL" },
+  { id: "t16", type: "credit", source: "order", title: "Order #RS-1014", subtitle: "Wireless Earbuds Pro × 3", amount: 1050, date: ago(13, 12, 20), status: "completed", method: "Wallet" },
 ];
-
-/*
-  Withdraw করলে onWithdraw(amount) ডাকা হবে। এখানে আপনার API call বসাবেন।
-  Promise ফেরত দিন। fail করলে throw করুন, তাহলে error দেখাবে।
-*/
 
 // ==================== HELPERS ====================
 const fmt = (n) =>
   new Intl.NumberFormat("en-BD", { maximumFractionDigits: 0 }).format(
     Math.round(n || 0)
   );
-
-const compact = (n) =>
-  new Intl.NumberFormat("en-US", {
-    notation: "compact",
-    maximumFractionDigits: 1,
-  }).format(Math.round(n || 0));
 
 const formatDate = (iso) =>
   new Date(iso).toLocaleDateString("en-US", {
@@ -75,7 +70,6 @@ const formatTime = (iso) =>
     minute: "2-digit",
   });
 
-// Bangladesh এ শুক্র ও শনিবার ব্যাংক বন্ধ, তাই এই দুই দিন বাদ
 const addBusinessDays = (from, n) => {
   const d = new Date(from);
   let left = n;
@@ -85,26 +79,6 @@ const addBusinessDays = (from, n) => {
     if (day !== 5 && day !== 6) left--;
   }
   return d;
-};
-
-const signed = (t) => (t.type === "credit" ? t.amount : -t.amount);
-
-const groupByDate = (items) => {
-  const today = new Date().toDateString();
-  const yesterday = new Date(Date.now() - 86400000).toDateString();
-  const groups = [];
-  const index = {};
-  items.forEach((t) => {
-    const d = new Date(t.date).toDateString();
-    const label =
-      d === today ? "Today" : d === yesterday ? "Yesterday" : formatDate(t.date);
-    if (index[label] === undefined) {
-      index[label] = groups.length;
-      groups.push({ label, items: [] });
-    }
-    groups[index[label]].items.push(t);
-  });
-  return groups;
 };
 
 const useEscape = (handler, enabled = true) => {
@@ -132,6 +106,7 @@ const Svg = ({ children, className = "h-5 w-5", ...rest }) => (
     {children}
   </svg>
 );
+
 const IconBox = (p) => (
   <Svg {...p}>
     <path d="M21 8 12 3 3 8l9 5 9-5Z" />
@@ -169,6 +144,12 @@ const IconDown = (p) => (
     <path d="M12 5v14M5 12l7 7 7-7" />
   </Svg>
 );
+const IconSearch = (p) => (
+  <Svg {...p}>
+    <circle cx="11" cy="11" r="7" />
+    <path d="m21 21-4.3-4.3" />
+  </Svg>
+);
 
 const SOURCE = {
   order: {
@@ -200,13 +181,6 @@ const FILTERS = [
   { id: "pending", label: "Pending" },
 ];
 
-const EMPTY_TEXT = {
-  all: "No transactions yet. Your first order earning will show up here.",
-  in: "No money in yet.",
-  out: "You have not withdrawn any money yet.",
-  pending: "Nothing is pending. All your order earnings are already in your balance.",
-};
-
 // ==================== MAIN ====================
 export default function WalletPage({
   wallet: walletProp = DEMO_WALLET,
@@ -216,6 +190,7 @@ export default function WalletPage({
   const [wallet, setWallet] = useState(walletProp);
   const [txs, setTxs] = useState(txProp);
   const [filter, setFilter] = useState("all");
+  const [search, setSearch] = useState("");
   const [showWithdraw, setShowWithdraw] = useState(false);
   const [detail, setDetail] = useState(null);
   const listRef = useRef(null);
@@ -235,13 +210,19 @@ export default function WalletPage({
     pending: pendingTxs.length,
   };
 
-  const filtered = sorted.filter((t) => {
-    if (filter === "in") return t.type === "credit";
-    if (filter === "out") return t.type === "debit";
-    if (filter === "pending") return t.status === "pending";
-    return true;
-  });
-  const groups = useMemo(() => groupByDate(filtered), [filtered]);
+  const filtered = useMemo(() => {
+    return sorted.filter((t) => {
+      if (filter === "in" && t.type !== "credit") return false;
+      if (filter === "out" && t.type !== "debit") return false;
+      if (filter === "pending" && t.status !== "pending") return false;
+      if (search.trim()) {
+        const q = search.toLowerCase();
+        const hay = `${t.title} ${t.subtitle} ${t.method || ""}`.toLowerCase();
+        if (!hay.includes(q)) return false;
+      }
+      return true;
+    });
+  }, [sorted, filter, search]);
 
   const goToList = (f) => {
     setFilter(f);
@@ -250,11 +231,12 @@ export default function WalletPage({
     );
   };
 
-  const canWithdraw = wallet.bank.verified && wallet.available >= wallet.minWithdraw;
+  const canWithdraw =
+    wallet.bank.verified && wallet.available >= wallet.minWithdraw;
 
   const handleWithdraw = async (amount) => {
     if (onWithdraw) await onWithdraw(amount);
-    else await new Promise((r) => setTimeout(r, 900)); // demo
+    else await new Promise((r) => setTimeout(r, 900));
     setWallet((w) => ({
       ...w,
       available: w.available - amount,
@@ -270,111 +252,237 @@ export default function WalletPage({
         amount,
         date: new Date().toISOString(),
         status: "processing",
+        method: "DBBL",
       },
       ...list,
     ]);
   };
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-5">
-      <style>{`
-        @keyframes mc-flow { to { background-position: 14px 0; } }
-        .mc-flow {
-          height: 2px;
-          background-image: linear-gradient(90deg, rgba(255,255,255,.7) 50%, transparent 50%);
-          background-size: 14px 2px;
-          animation: mc-flow 1.1s linear infinite;
-        }
-        @media (prefers-reduced-motion: reduce) { .mc-flow { animation: none; } }
-      `}</style>
-
+    <div className="mx-auto flex max-w-6xl flex-col gap-6">
       {/* ============ HEADER ============ */}
       <div>
-        <h1 className="text-3xl font-bold text-[var(--color-ink)]">Wallet</h1>
+        <h1 className="text-2xl font-semibold text-[var(--color-ink)]">
+          Wallet
+        </h1>
         <p className="mt-1 text-sm text-[var(--color-ink)]/60">
-          See where your money is, and take it out when you are ready.
+          Manage your earnings, withdrawals, and transaction history.
         </p>
       </div>
 
-      {/* ============ HERO: BALANCE + MONEY PIPELINE ============ */}
-      <section className="overflow-hidden rounded-3xl border border-[var(--color-line)] bg-white">
-        <div className="flex flex-col gap-5 p-5 sm:flex-row sm:items-end sm:justify-between sm:p-7">
-          <div>
-            <p className="flex items-center gap-2 text-sm font-medium text-[var(--color-ink)]/65">
-              <span className="h-2.5 w-2.5 rounded-full bg-[var(--color-brand-teal)]" />
-              Ready to withdraw
-            </p>
-            <p className="mt-2 text-5xl font-bold tabular-nums tracking-tight text-[var(--color-brand-navy)] sm:text-6xl">
-              ৳{fmt(wallet.available)}
-            </p>
-            <p className="mt-3 max-w-md text-sm leading-relaxed text-[var(--color-ink)]/60">
-              {pendingSum > 0
-                ? `৳${fmt(pendingSum)} more is on the way. It joins your balance after the customer receives the order.`
-                : "No money is waiting. Every order is already in your balance."}
-            </p>
-          </div>
-
-          <div className="sm:text-right">
-            <button
-              type="button"
-              disabled={!canWithdraw}
-              onClick={() => setShowWithdraw(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-[var(--color-brand-orange)] px-7 py-4 text-base font-semibold text-white transition-colors hover:bg-[var(--color-brand-orange-dark)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-brand-orange)]/40 disabled:cursor-not-allowed disabled:bg-[var(--color-ink)]/10 disabled:text-[var(--color-ink)]/30 sm:w-auto"
+      {/* ============ BANK CARD + STATS ============ */}
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[420px_1fr]">
+        {/* ===== Real Bank Card ===== */}
+        <div className="mx-auto w-full max-w-[420px]">
+          <div
+            className="relative aspect-[1.586/1] w-full overflow-hidden rounded-2xl p-6 text-white shadow-2xl shadow-black/30"
+            style={{
+              background:
+                "linear-gradient(135deg, #0a0f1c 0%, #131c33 45%, #0b1220 100%)",
+            }}
+          >
+            {/* ============ TOP-LEFT ORANGE GLOW ============ */}
+            <div className="pointer-events-none absolute -left-16 -top-16 h-56 w-56">
+              <div
+                className="h-full w-full rounded-full blur-[60px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(251,146,60,0.95) 0%, rgba(249,115,22,0.6) 40%, transparent 75%)",
+                }}
+              />
+            </div>
+            {/* Concentric arcs — orange corner */}
+            <svg
+              className="pointer-events-none absolute -left-8 -top-8 h-48 w-48"
+              viewBox="0 0 200 200"
+              fill="none"
             >
-              <IconDown className="h-5 w-5" />
-              Withdraw money
-            </button>
-            <p className="mt-2 text-xs text-[var(--color-ink)]/50">
-              {!wallet.bank.verified
-                ? "Verify your bank account to withdraw."
-                : wallet.available < wallet.minWithdraw
-                ? `You need at least ৳${fmt(wallet.minWithdraw)} to withdraw.`
-                : `Minimum ৳${fmt(wallet.minWithdraw)}. Arrives in 2-3 business days.`}
+              <circle cx="0" cy="0" r="60" stroke="#fb923c" strokeWidth="1.2" strokeOpacity="0.6" />
+              <circle cx="0" cy="0" r="90" stroke="#fb923c" strokeWidth="1" strokeOpacity="0.4" />
+              <circle cx="0" cy="0" r="120" stroke="#fb923c" strokeWidth="0.8" strokeOpacity="0.25" />
+              <circle cx="0" cy="0" r="150" stroke="#fb923c" strokeWidth="0.6" strokeOpacity="0.15" />
+            </svg>
+
+            {/* ============ BOTTOM-RIGHT RED GLOW ============ */}
+            <div className="pointer-events-none absolute -bottom-16 -right-16 h-56 w-56">
+              <div
+                className="h-full w-full rounded-full blur-[60px]"
+                style={{
+                  background:
+                    "radial-gradient(circle, rgba(239,68,68,0.95) 0%, rgba(220,38,38,0.6) 40%, transparent 75%)",
+                }}
+              />
+            </div>
+            {/* Concentric arcs — red corner */}
+            <svg
+              className="pointer-events-none absolute -bottom-8 -right-8 h-48 w-48"
+              viewBox="0 0 200 200"
+              fill="none"
+            >
+              <circle cx="200" cy="200" r="60" stroke="#ef4444" strokeWidth="1.2" strokeOpacity="0.6" />
+              <circle cx="200" cy="200" r="90" stroke="#ef4444" strokeWidth="1" strokeOpacity="0.4" />
+              <circle cx="200" cy="200" r="120" stroke="#ef4444" strokeWidth="0.8" strokeOpacity="0.25" />
+              <circle cx="200" cy="200" r="150" stroke="#ef4444" strokeWidth="0.6" strokeOpacity="0.15" />
+            </svg>
+
+            {/* ============ DOT TEXTURE ============ */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.06]"
+              style={{
+                backgroundImage:
+                  "radial-gradient(circle at 1px 1px, white 1px, transparent 0)",
+                backgroundSize: "18px 18px",
+              }}
+            />
+
+            {/* ============ DIAGONAL SHINE ============ */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-[0.08]"
+              style={{
+                background:
+                  "linear-gradient(115deg, transparent 40%, white 50%, transparent 60%)",
+              }}
+            />
+
+            {/* ============ CONTENT ============ */}
+            <div className="relative flex h-full flex-col justify-between">
+              {/* Top: chip + network */}
+              <div className="flex items-start justify-between">
+                {/* EMV Chip */}
+                <div className="relative h-9 w-12 overflow-hidden rounded-md bg-gradient-to-br from-amber-200 via-amber-400 to-amber-600 shadow-md shadow-amber-900/30">
+                  <div className="absolute inset-0 grid grid-cols-3 grid-rows-2 gap-px p-1">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                      <div key={i} className="rounded-sm bg-amber-800/25" />
+                    ))}
+                  </div>
+                  <div className="absolute inset-x-2 top-1/2 h-px bg-amber-800/30" />
+                  <div className="absolute inset-y-2 left-1/2 w-px bg-amber-800/30" />
+                </div>
+
+                {/* Network */}
+                <div className="text-right">
+                  <p className="text-[11px] font-black italic tracking-[0.15em] text-white/90 drop-shadow-sm">
+                    {wallet.bank.network || "VISA"}
+                  </p>
+                  <p className="mt-0.5 text-[9px] uppercase tracking-[0.25em] text-white/40">
+                    Debit
+                  </p>
+                </div>
+              </div>
+
+              {/* Middle: Balance */}
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.25em] text-white/45">
+                  Available Balance
+                </p>
+                <p className="mt-1 text-3xl font-bold tabular-nums tracking-tight">
+                  ৳ {fmt(wallet.available)}
+                </p>
+              </div>
+
+              {/* Bottom: Card number + holder + expiry */}
+              <div>
+                <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-white/40">
+                  Card Number
+                </p>
+                <p className="mt-1 font-mono text-[15px] tracking-[0.15em] text-white/95 drop-shadow-sm">
+                  {wallet.bank.cardNumber || "4831 5567 8901 4567"}
+                </p>
+
+                <div className="mt-3 flex items-end justify-between">
+                  <div className="min-w-0">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-white/40">
+                      Card Holder
+                    </p>
+                    <p className="mt-0.5 truncate text-xs font-semibold tracking-wider">
+                      {wallet.bank.holder || "YOUR NAME"}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-[9px] font-semibold uppercase tracking-[0.2em] text-white/40">
+                      Valid Thru
+                    </p>
+                    <p className="mt-0.5 font-mono text-xs font-semibold tracking-wider">
+                      {wallet.bank.expiry || "09/27"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Withdraw CTA */}
+          <button
+            type="button"
+            disabled={!canWithdraw}
+            onClick={() => setShowWithdraw(true)}
+            className="mt-4 inline-flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-500/40 disabled:cursor-not-allowed disabled:bg-none disabled:bg-[var(--color-ink)]/10 disabled:text-[var(--color-ink)]/30 disabled:shadow-none disabled:hover:translate-y-0"
+          >
+            <IconDown className="h-4 w-4" />
+            Withdraw money
+          </button>
+
+          <p className="mt-2 text-center text-xs text-[var(--color-ink)]/50">
+            {!wallet.bank.verified
+              ? "Verify your bank to withdraw"
+              : wallet.available < wallet.minWithdraw
+              ? `Minimum ৳${fmt(wallet.minWithdraw)} to withdraw`
+              : `Min ৳${fmt(wallet.minWithdraw)} · Arrives in 2-3 business days`}
+          </p>
+        </div>
+
+        {/* ===== Right Side: Wallet Stats ===== */}
+        <div className="flex flex-col gap-4">
+          <div className="rounded-2xl border border-[var(--color-line)] bg-white p-6">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--color-ink)]/50">
+                  <span className="h-2 w-2 rounded-full bg-[var(--color-brand-teal)]" />
+                  Available to withdraw
+                </p>
+                <p className="mt-2 text-4xl font-bold tabular-nums tracking-tight text-[var(--color-brand-navy)]">
+                  ৳{fmt(wallet.available)}
+                </p>
+              </div>
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-[var(--color-brand-teal)]/10 text-[var(--color-brand-teal)]">
+                <IconCheck className="h-6 w-6" />
+              </span>
+            </div>
+            <p className="mt-3 text-sm text-[var(--color-ink)]/60">
+              {pendingSum > 0
+                ? `৳${fmt(pendingSum)} more is coming from ${pendingTxs.length} pending order${pendingTxs.length > 1 ? "s" : ""}.`
+                : "Every order is already settled in your balance."}
             </p>
           </div>
-        </div>
 
-        {/* pipeline */}
-        <div className="bg-[var(--color-brand-navy)] px-5 pb-5 pt-4 text-white sm:px-7">
-          <p className="text-xs text-white/55">
-            How your money moves. Tap a step to see its transactions.
-          </p>
-          <div className="mt-4 grid grid-cols-3">
-            <Station
-              ring
-              flowing
-              label="Pending"
-              amount={pendingSum}
-              note={`${pendingTxs.length} ${pendingTxs.length === 1 ? "order" : "orders"} on the way`}
-              onClick={() => goToList("pending")}
-            />
-            <Station
-              teal
-              flowing={false}
-              label="Available"
-              amount={wallet.available}
-              note="Yours to withdraw"
-              onClick={() => goToList("in")}
-            />
-            <Station
-              last
-              label="Withdrawn"
-              amount={wallet.withdrawn}
-              note="Sent to your bank"
-              onClick={() => goToList("out")}
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div className="rounded-2xl border border-[var(--color-line)] bg-white p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/45">
+                Pending
+              </p>
+              <p className="mt-1.5 text-2xl font-bold tabular-nums text-[var(--color-brand-orange)]">
+                ৳{fmt(pendingSum)}
+              </p>
+              <p className="mt-0.5 text-xs text-[var(--color-ink)]/50">
+                {pendingTxs.length} order{pendingTxs.length !== 1 ? "s" : ""}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-[var(--color-line)] bg-white p-4">
+              <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/45">
+                Total withdrawn
+              </p>
+              <p className="mt-1.5 text-2xl font-bold tabular-nums text-[var(--color-ink)]">
+                ৳{fmt(wallet.withdrawn)}
+              </p>
+              <p className="mt-0.5 text-xs text-[var(--color-ink)]/50">
+                All time
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
 
-      {/* ============ EARNINGS + PAYOUT ============ */}
-      <div className="grid grid-cols-1 gap-5 md:grid-cols-[1.4fr_1fr]">
-        <EarningsCard txs={txs} />
-
-        <div className="flex flex-col gap-4">
-          <div className="rounded-3xl border border-[var(--color-line)] bg-white p-5">
-            <p className="text-sm font-semibold text-[var(--color-ink)]">
-              Your payout account
+          <div className="rounded-2xl border border-[var(--color-line)] bg-white p-5">
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/45">
+              Payout method
             </p>
             <div className="mt-3 flex items-center gap-3">
               <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[var(--color-brand-navy)]/10 text-[var(--color-brand-navy)]">
@@ -384,54 +492,50 @@ export default function WalletPage({
                 <p className="truncate text-sm font-semibold text-[var(--color-ink)]">
                   {wallet.bank.name}
                 </p>
-                <p className="text-sm tabular-nums text-[var(--color-ink)]/55">
+                <p className="text-xs tabular-nums text-[var(--color-ink)]/55">
                   {wallet.bank.account}
                 </p>
               </div>
-            </div>
-            <p
-              className={`mt-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ${
-                wallet.bank.verified
-                  ? "bg-[var(--color-brand-teal)]/10 text-[var(--color-brand-teal)]"
-                  : "bg-[var(--color-brand-orange)]/10 text-[var(--color-brand-orange-dark)]"
-              }`}
-            >
-              {wallet.bank.verified ? (
-                <>
-                  <IconCheck className="h-3.5 w-3.5" /> Verified
-                </>
-              ) : (
-                "Not verified yet"
+              {wallet.bank.verified && (
+                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-[var(--color-brand-teal)]/10 px-2.5 py-1 text-[10px] font-semibold text-[var(--color-brand-teal)]">
+                  <IconCheck className="h-3 w-3" />
+                  Verified
+                </span>
               )}
-            </p>
-            <p className="mt-3 text-xs leading-relaxed text-[var(--color-ink)]/50">
-              Money is only ever sent to this account.
-            </p>
-          </div>
-
-          <div className="rounded-3xl bg-[var(--color-brand-cream)] p-5">
-            <p className="text-sm font-semibold text-[var(--color-ink)]">
-              Good to know
-            </p>
-            <ul className="mt-2 flex flex-col gap-2 text-sm text-[var(--color-ink)]/65">
-              <li>Pending money becomes available after delivery.</li>
-              <li>You can withdraw from ৳{fmt(wallet.minWithdraw)}.</li>
-              <li>Friday and Saturday are not counted as business days.</li>
-            </ul>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* ============ TRANSACTIONS ============ */}
+      {/* ============ TRANSACTIONS TABLE ============ */}
       <section
         ref={listRef}
-        className="scroll-mt-4 rounded-3xl border border-[var(--color-line)] bg-white"
+        className="scroll-mt-4 overflow-hidden rounded-2xl border border-[var(--color-line)] bg-white"
       >
-        <div className="border-b border-[var(--color-line)] p-4 sm:p-5">
-          <h2 className="text-base font-semibold text-[var(--color-ink)]">
-            Transactions
-          </h2>
-          <div className="-mx-1 mt-3 flex gap-2 overflow-x-auto px-1 pb-1">
+        <div className="flex flex-col gap-4 border-b border-[var(--color-line)] p-5">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <h2 className="text-lg font-semibold text-[var(--color-ink)]">
+                Transaction history
+              </h2>
+              <p className="mt-0.5 text-xs text-[var(--color-ink)]/50">
+                {filtered.length} {filtered.length === 1 ? "entry" : "entries"}
+              </p>
+            </div>
+
+            <div className="relative w-full max-w-xs">
+              <IconSearch className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--color-ink)]/40" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Search transactions..."
+                className="w-full rounded-lg border border-[var(--color-line)] bg-white py-2 pl-9 pr-3 text-sm outline-none transition-colors focus:border-[var(--color-brand-orange)]"
+              />
+            </div>
+          </div>
+
+          <div className="flex flex-wrap gap-2">
             {FILTERS.map((f) => {
               const on = filter === f.id;
               return (
@@ -439,16 +543,15 @@ export default function WalletPage({
                   key={f.id}
                   type="button"
                   onClick={() => setFilter(f.id)}
-                  aria-pressed={on}
-                  className={`flex shrink-0 items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-orange)] ${
+                  className={`flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-orange)] ${
                     on
                       ? "bg-[var(--color-brand-navy)] text-white"
-                      : "bg-[var(--color-brand-cream)] text-[var(--color-ink)]/70 hover:bg-[var(--color-line)]"
+                      : "bg-[var(--color-brand-cream)] text-[var(--color-ink)]/60 hover:bg-[var(--color-line)]"
                   }`}
                 >
                   {f.label}
                   <span
-                    className={`rounded-full px-1.5 text-xs tabular-nums ${
+                    className={`rounded-full px-1.5 text-[10px] tabular-nums ${
                       on ? "bg-white/20" : "bg-white"
                     }`}
                   >
@@ -461,38 +564,135 @@ export default function WalletPage({
         </div>
 
         {filtered.length === 0 ? (
-          <p className="p-10 text-center text-sm text-[var(--color-ink)]/55">
-            {EMPTY_TEXT[filter]}
-          </p>
+          <div className="p-16 text-center">
+            <div className="mx-auto mb-4 grid h-14 w-14 place-items-center rounded-full bg-[var(--color-brand-cream)] text-2xl">
+              🪙
+            </div>
+            <p className="text-sm font-medium text-[var(--color-ink)]">
+              No transactions found
+            </p>
+            <p className="mt-1 text-xs text-[var(--color-ink)]/50">
+              {search ? "Try a different search." : "Nothing matches this filter."}
+            </p>
+          </div>
         ) : (
-          <div className="p-2 sm:p-3">
-            {groups.map((g) => {
-              const net = g.items
-                .filter((t) => t.status !== "pending")
-                .reduce((s, t) => s + signed(t), 0);
-              return (
-                <div key={g.label} className="mb-2">
-                  <div className="flex items-baseline justify-between px-3 pb-1 pt-3">
-                    <p className="text-sm font-semibold text-[var(--color-ink)]">
-                      {g.label}
-                    </p>
-                    <p className="text-xs tabular-nums text-[var(--color-ink)]/50">
-                      {net === 0
-                        ? ""
-                        : `${net > 0 ? "+" : "−"}৳${fmt(Math.abs(net))} today`.replace(
-                            "today",
-                            g.label === "Today" ? "so far" : "net"
-                          )}
-                    </p>
-                  </div>
-                  <ul>
-                    {g.items.map((t) => (
-                      <TransactionRow key={t.id} t={t} onOpen={() => setDetail(t)} />
-                    ))}
-                  </ul>
-                </div>
-              );
-            })}
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[700px]">
+              <thead className="bg-[var(--color-brand-cream)]/60">
+                <tr>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/50">
+                    Transaction
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/50">
+                    Type
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/50">
+                    Date
+                  </th>
+                  <th className="px-5 py-3 text-left text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/50">
+                    Status
+                  </th>
+                  <th className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/50">
+                    Amount
+                  </th>
+                  <th className="px-5 py-3 text-right text-[10px] font-semibold uppercase tracking-wider text-[var(--color-ink)]/50">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--color-line)]">
+                {filtered.map((t) => {
+                  const isCredit = t.type === "credit";
+                  const pending = t.status === "pending";
+                  const processing = t.status === "processing";
+                  const meta = SOURCE[t.source] || SOURCE.order;
+                  const Icon = meta.Icon;
+
+                  return (
+                    <tr
+                      key={t.id}
+                      className="transition-colors hover:bg-[var(--color-brand-cream)]/40"
+                    >
+                      <td className="px-5 py-4">
+                        <div className="flex items-center gap-3">
+                          <span
+                            className={`grid h-10 w-10 shrink-0 place-items-center rounded-xl ${meta.tile}`}
+                          >
+                            <Icon className="h-5 w-5" />
+                          </span>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-[var(--color-ink)]">
+                              {t.title}
+                            </p>
+                            <p className="truncate text-xs text-[var(--color-ink)]/50">
+                              {t.subtitle}
+                            </p>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td className="px-5 py-4">
+                        <span className="text-xs font-medium text-[var(--color-ink)]/70">
+                          {meta.label}
+                        </span>
+                      </td>
+
+                      <td className="px-5 py-4">
+                        <p className="text-xs font-medium text-[var(--color-ink)]">
+                          {formatDate(t.date)}
+                        </p>
+                        <p className="text-[11px] tabular-nums text-[var(--color-ink)]/50">
+                          {formatTime(t.date)}
+                        </p>
+                      </td>
+
+                      <td className="px-5 py-4">
+                        {pending ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-brand-orange)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--color-brand-orange-dark)]">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-brand-orange)]" />
+                            Pending
+                          </span>
+                        ) : processing ? (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-brand-navy)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--color-brand-navy)]">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-brand-navy)]" />
+                            Processing
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5 rounded-full bg-[var(--color-brand-teal)]/10 px-2.5 py-1 text-[11px] font-semibold text-[var(--color-brand-teal)]">
+                            <span className="h-1.5 w-1.5 rounded-full bg-[var(--color-brand-teal)]" />
+                            Completed
+                          </span>
+                        )}
+                      </td>
+
+                      <td className="px-5 py-4 text-right">
+                        <p
+                          className={`text-sm font-bold tabular-nums ${
+                            pending
+                              ? "text-[var(--color-ink)]/40"
+                              : isCredit
+                              ? "text-[var(--color-brand-teal)]"
+                              : "text-[var(--color-ink)]"
+                          }`}
+                        >
+                          {isCredit ? "+" : "−"}৳{fmt(t.amount)}
+                        </p>
+                      </td>
+
+                      <td className="px-5 py-4 text-right">
+                        <button
+                          type="button"
+                          onClick={() => setDetail(t)}
+                          className="cursor-pointer rounded-lg border border-[var(--color-line)] px-3 py-1.5 text-xs font-semibold text-[var(--color-ink)]/60 transition-colors hover:border-[var(--color-brand-navy)] hover:bg-[var(--color-brand-navy)] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-orange)]"
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
           </div>
         )}
       </section>
@@ -514,190 +714,12 @@ export default function WalletPage({
   );
 }
 
-// ==================== PIPELINE STATION ====================
-function Station({ label, amount, note, onClick, ring, teal, flowing, last }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group min-w-0 pr-1 text-left focus-visible:outline-none"
-    >
-      <div className="flex items-center">
-        <span
-          className={`h-4 w-4 shrink-0 rounded-full transition-transform group-hover:scale-125 group-focus-visible:ring-4 group-focus-visible:ring-[var(--color-brand-orange)]/50 ${
-            ring
-              ? "border-2 border-[var(--color-brand-orange)] bg-transparent"
-              : teal
-              ? "bg-[var(--color-brand-teal)]"
-              : "bg-white/70"
-          }`}
-        />
-        {!last && (
-          <span
-            className={`mx-2 min-w-3 flex-1 ${
-              flowing ? "mc-flow" : "border-t-2 border-dashed border-white/25"
-            }`}
-          />
-        )}
-      </div>
-      <p className="mt-3 text-sm text-white/65">{label}</p>
-      <p className="text-lg font-bold tabular-nums sm:text-2xl">৳{fmt(amount)}</p>
-      <p className="mt-0.5 text-xs leading-snug text-white/45 group-hover:text-white/70">
-        {note}
-      </p>
-    </button>
-  );
-}
-
-// ==================== EARNINGS CARD ====================
-function EarningsCard({ txs }) {
-  const days = useMemo(() => {
-    const out = [];
-    for (let i = 13; i >= 0; i--) {
-      const d = new Date();
-      d.setDate(d.getDate() - i);
-      out.push({ key: d.toDateString(), date: d, total: 0 });
-    }
-    txs.forEach((t) => {
-      if (t.type === "credit" && t.status === "completed") {
-        const day = out.find((x) => x.key === new Date(t.date).toDateString());
-        if (day) day.total += t.amount;
-      }
-    });
-    return out;
-  }, [txs]);
-
-  const [sel, setSel] = useState(13);
-  const total = days.reduce((s, d) => s + d.total, 0);
-  const max = Math.max(...days.map((d) => d.total), 1);
-  const picked = days[sel];
-
-  return (
-    <div className="rounded-3xl border border-[var(--color-line)] bg-white p-5">
-      <p className="text-sm font-semibold text-[var(--color-ink)]">
-        What you earned in the last 14 days
-      </p>
-      <p className="mt-1 text-3xl font-bold tabular-nums text-[var(--color-brand-teal)]">
-        ৳{fmt(total)}
-      </p>
-
-      <div className="mt-4 flex h-28 items-end gap-1.5">
-        {days.map((d, i) => {
-          const on = sel === i;
-          const h = d.total > 0 ? Math.max((d.total / max) * 100, 10) : 3;
-          return (
-            <button
-              key={d.key}
-              type="button"
-              onClick={() => setSel(i)}
-              aria-label={`${formatShort(d.date)}: ৳${fmt(d.total)}`}
-              aria-pressed={on}
-              className="group flex h-full flex-1 flex-col justify-end focus-visible:outline-none"
-            >
-              <span
-                className="block w-full rounded-t-md transition-[height] duration-300 group-focus-visible:ring-2 group-focus-visible:ring-[var(--color-brand-orange)] motion-reduce:transition-none"
-                style={{
-                  height: `${h}%`,
-                  background: on
-                    ? "var(--color-brand-orange)"
-                    : d.total > 0
-                    ? "var(--color-brand-navy)"
-                    : "var(--color-line)",
-                  opacity: on || d.total === 0 ? 1 : 0.8,
-                }}
-              />
-            </button>
-          );
-        })}
-      </div>
-      <div className="mt-1.5 flex gap-1.5">
-        {days.map((d, i) => (
-          <span
-            key={d.key}
-            className={`flex-1 text-center text-[10px] tabular-nums ${
-              sel === i
-                ? "font-semibold text-[var(--color-brand-orange-dark)]"
-                : "text-[var(--color-ink)]/40"
-            }`}
-          >
-            {d.date.getDate()}
-          </span>
-        ))}
-      </div>
-
-      <p className="mt-3 rounded-xl bg-[var(--color-brand-cream)] px-3 py-2 text-sm text-[var(--color-ink)]/70">
-        {sel === 13 ? "Today" : formatShort(picked.date)}:{" "}
-        {picked.total > 0 ? (
-          <b className="tabular-nums text-[var(--color-ink)]">৳{fmt(picked.total)}</b>
-        ) : (
-          "no earnings"
-        )}
-      </p>
-    </div>
-  );
-}
-
-// ==================== TRANSACTION ROW ====================
-function TransactionRow({ t, onOpen }) {
-  const isCredit = t.type === "credit";
-  const pending = t.status === "pending";
-  const processing = t.status === "processing";
-  const meta = SOURCE[t.source] || SOURCE.order;
-  const Icon = meta.Icon;
-
-  return (
-    <li>
-      <button
-        type="button"
-        onClick={onOpen}
-        className="flex w-full items-center gap-3 rounded-2xl px-3 py-3 text-left transition-colors hover:bg-[var(--color-brand-cream)]/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-orange)]"
-      >
-        <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-xl ${meta.tile}`}>
-          <Icon />
-        </span>
-
-        <div className="min-w-0 flex-1">
-          <p className="truncate text-sm font-semibold text-[var(--color-ink)]">
-            {t.title}
-          </p>
-          <p className="truncate text-xs text-[var(--color-ink)]/55">{t.subtitle}</p>
-        </div>
-
-        <div className="shrink-0 text-right">
-          <p
-            className={`text-sm font-bold tabular-nums ${
-              pending
-                ? "text-[var(--color-ink)]/45"
-                : isCredit
-                ? "text-[var(--color-brand-teal)]"
-                : "text-[var(--color-ink)]"
-            }`}
-          >
-            {isCredit ? "+" : "−"}৳{fmt(t.amount)}
-          </p>
-          {pending ? (
-            <span className="mt-0.5 inline-block rounded-full bg-[var(--color-brand-orange)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--color-brand-orange-dark)]">
-              Pending
-            </span>
-          ) : processing ? (
-            <span className="mt-0.5 inline-block rounded-full bg-[var(--color-brand-navy)]/10 px-2 py-0.5 text-[11px] font-semibold text-[var(--color-brand-navy)]">
-              Processing
-            </span>
-          ) : (
-            <p className="text-[11px] text-[var(--color-ink)]/40">{formatTime(t.date)}</p>
-          )}
-        </div>
-      </button>
-    </li>
-  );
-}
-
 // ==================== SHEET WRAPPER ====================
 function Sheet({ labelId, onClose, locked, children }) {
   useEscape(onClose, !locked);
   return (
     <div
-      className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--color-brand-navy)]/60 sm:items-center sm:p-4"
+      className="fixed inset-0 z-50 flex items-end justify-center bg-[var(--color-brand-navy)]/60 backdrop-blur-sm sm:items-center sm:p-4"
       onClick={locked ? undefined : onClose}
     >
       <div
@@ -727,7 +749,7 @@ function SheetHeader({ id, title, sub, onClose, disabled }) {
         onClick={onClose}
         disabled={disabled}
         aria-label="Close"
-        className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-[var(--color-ink)]/50 transition-colors hover:bg-[var(--color-ink)]/5 disabled:opacity-40"
+        className="grid h-9 w-9 shrink-0 cursor-pointer place-items-center rounded-xl text-[var(--color-ink)]/50 transition-colors hover:bg-[var(--color-ink)]/5 disabled:cursor-not-allowed disabled:opacity-40"
       >
         <IconClose className="h-4 w-4" />
       </button>
@@ -738,7 +760,7 @@ function SheetHeader({ id, title, sub, onClose, disabled }) {
 // ==================== WITHDRAW SHEET ====================
 function WithdrawSheet({ available, min, bank, onClose, onConfirm }) {
   const [amount, setAmount] = useState("");
-  const [phase, setPhase] = useState("form"); // form | sending | done | error
+  const [phase, setPhase] = useState("form");
   const n = Number(amount) || 0;
   const tooLow = n > 0 && n < min;
   const tooHigh = n > available;
@@ -777,17 +799,10 @@ function WithdrawSheet({ available, min, bank, onClose, onConfirm }) {
           <p className="mt-2 text-sm text-[var(--color-ink)]/60">
             Expected in {bank.name} by <b>{formatShort(arrive)}</b>.
           </p>
-
-          <ol className="mt-5 w-full rounded-2xl bg-[var(--color-brand-cream)] p-4 text-left text-sm">
-            <Step done>We got your request</Step>
-            <Step current>Bank is processing it</Step>
-            <Step last>Money arrives in your account</Step>
-          </ol>
-
           <button
             type="button"
             onClick={onClose}
-            className="mt-5 w-full rounded-2xl bg-[var(--color-brand-navy)] py-3.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-brand-navy-light)]"
+            className="mt-5 w-full cursor-pointer rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 py-3.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-500/40"
           >
             Done
           </button>
@@ -801,7 +816,7 @@ function WithdrawSheet({ available, min, bank, onClose, onConfirm }) {
       <SheetHeader
         id="wd-title"
         title="Withdraw money"
-        sub={`You have ৳${fmt(available)} available`}
+        sub={`Available ৳${fmt(available)}`}
         onClose={onClose}
         disabled={phase === "sending"}
       />
@@ -810,7 +825,7 @@ function WithdrawSheet({ available, min, bank, onClose, onConfirm }) {
         <label htmlFor="wd-amount" className="text-sm font-medium text-[var(--color-ink)]">
           How much do you want to withdraw?
         </label>
-        <div className="mt-2 flex items-center gap-2 rounded-2xl border-2 border-[var(--color-line)] px-4 py-3 focus-within:border-[var(--color-brand-orange)]">
+        <div className="mt-2 flex items-center gap-2 rounded-2xl border-2 border-[var(--color-line)] px-4 py-3 transition-colors focus-within:border-[var(--color-brand-orange)]">
           <span className="text-3xl font-semibold text-[var(--color-ink)]/30">৳</span>
           <input
             id="wd-amount"
@@ -832,7 +847,7 @@ function WithdrawSheet({ available, min, bank, onClose, onConfirm }) {
               type="button"
               disabled={value < min}
               onClick={() => setAmount(String(value))}
-              className={`rounded-xl border py-2 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
+              className={`cursor-pointer rounded-xl border py-2 text-sm font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-orange)] disabled:cursor-not-allowed disabled:opacity-40 ${
                 n === value
                   ? "border-[var(--color-brand-orange)] bg-[var(--color-brand-orange)] text-white"
                   : "border-[var(--color-line)] text-[var(--color-ink)]/70 hover:border-[var(--color-brand-orange)]/50"
@@ -879,7 +894,7 @@ function WithdrawSheet({ available, min, bank, onClose, onConfirm }) {
           type="button"
           disabled={!canSubmit}
           onClick={submit}
-          className="mt-5 w-full rounded-2xl bg-[var(--color-brand-orange)] py-4 text-base font-semibold text-white transition-colors hover:bg-[var(--color-brand-orange-dark)] focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[var(--color-brand-orange)]/40 disabled:cursor-not-allowed disabled:bg-[var(--color-ink)]/10 disabled:text-[var(--color-ink)]/30"
+          className="mt-5 w-full cursor-pointer rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 py-4 text-base font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40 focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-orange-500/40 disabled:cursor-not-allowed disabled:bg-none disabled:bg-[var(--color-ink)]/10 disabled:text-[var(--color-ink)]/30 disabled:shadow-none disabled:hover:translate-y-0"
         >
           {phase === "sending"
             ? "Sending request..."
@@ -907,7 +922,7 @@ function DetailSheet({ t, bank, onClose }) {
   else if (t.source === "order")
     message = "This earning was added to your available balance.";
   else if (t.source === "bonus")
-    message = "A bonus from admin. It was added to your available balance.";
+    message = "A bonus from admin. Added to your available balance.";
   else if (t.source === "refund")
     message = "The customer returned this order, so your earning from it was taken back.";
   else if (t.source === "withdraw" && !processing)
@@ -922,8 +937,12 @@ function DetailSheet({ t, bank, onClose }) {
             <Icon className="h-6 w-6" />
           </span>
           <div className="min-w-0">
-            <p className="truncate text-base font-semibold text-[var(--color-ink)]">{t.title}</p>
-            <p className="truncate text-sm text-[var(--color-ink)]/55">{t.subtitle}</p>
+            <p className="truncate text-base font-semibold text-[var(--color-ink)]">
+              {t.title}
+            </p>
+            <p className="truncate text-sm text-[var(--color-ink)]/55">
+              {t.subtitle}
+            </p>
           </div>
         </div>
 
@@ -945,28 +964,24 @@ function DetailSheet({ t, bank, onClose }) {
           </p>
         )}
 
-        {processing && (
-          <ol className="mt-3 rounded-2xl bg-[var(--color-brand-cream)] p-4 text-sm">
-            <Step done>We got your request</Step>
-            <Step current>Bank is processing it</Step>
-            <Step last>Money arrives in your account</Step>
-          </ol>
-        )}
-
         <dl className="mt-4 divide-y divide-dashed divide-[var(--color-line)] text-sm">
           <DetailRow label="Type" value={meta.label} />
           <DetailRow
             label="Status"
             value={pending ? "Pending" : processing ? "Processing" : "Completed"}
           />
-          <DetailRow label="Date" value={`${formatDate(t.date)}, ${formatTime(t.date)}`} />
+          <DetailRow label="Method" value={t.method || "Wallet"} />
+          <DetailRow
+            label="Date"
+            value={`${formatDate(t.date)}, ${formatTime(t.date)}`}
+          />
           <DetailRow label="Reference" value={t.id.toUpperCase()} />
         </dl>
 
         <button
           type="button"
           onClick={onClose}
-          className="mt-5 w-full rounded-2xl border border-[var(--color-line)] py-3.5 text-sm font-semibold text-[var(--color-ink)]/70 transition-colors hover:bg-[var(--color-brand-cream)]"
+          className="mt-5 w-full cursor-pointer rounded-2xl border border-[var(--color-line)] py-3.5 text-sm font-semibold text-[var(--color-ink)]/70 transition-colors hover:bg-[var(--color-brand-cream)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-brand-orange)]"
         >
           Close
         </button>
@@ -982,41 +997,5 @@ function DetailRow({ label, value }) {
       <dt className="text-[var(--color-ink)]/60">{label}</dt>
       <dd className="text-right font-semibold text-[var(--color-ink)]">{value}</dd>
     </div>
-  );
-}
-
-function Step({ done, current, last, children }) {
-  return (
-    <li className="relative flex items-center gap-3 pb-3 last:pb-0">
-      {!last && (
-        <span
-          className={`absolute left-[9px] top-5 h-[calc(100%-8px)] w-0.5 ${
-            done ? "bg-[var(--color-brand-teal)]" : "bg-[var(--color-line)]"
-          }`}
-        />
-      )}
-      <span
-        className={`relative grid h-5 w-5 shrink-0 place-items-center rounded-full ${
-          done
-            ? "bg-[var(--color-brand-teal)] text-white"
-            : current
-            ? "border-2 border-[var(--color-brand-orange)] bg-white"
-            : "border-2 border-[var(--color-line)] bg-white"
-        }`}
-      >
-        {done && <IconCheck className="h-3 w-3" />}
-      </span>
-      <span
-        className={
-          current
-            ? "font-semibold text-[var(--color-ink)]"
-            : done
-            ? "text-[var(--color-ink)]/75"
-            : "text-[var(--color-ink)]/50"
-        }
-      >
-        {children}
-      </span>
-    </li>
   );
 }
