@@ -53,7 +53,7 @@ export default function CatalogPage() {
   };
 
   return (
-    <div className="mx-auto flex max-w-7xl flex-col gap-8 p-4 sm:p-6 lg:p-8">
+    <div className="mx-auto flex max-w-7xl flex-col gap-8 p-4 sm:p-6 lg:p-2">
       {/* ===== HERO HEADER ===== */}
       <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 p-8 text-white shadow-2xl">
         <div className="absolute -right-10 -top-10 h-64 w-64 rounded-full bg-orange-500/10 blur-3xl" />
@@ -65,7 +65,7 @@ export default function CatalogPage() {
               <span className="h-2 w-2 rounded-full bg-orange-400 animate-pulse" />
               Live Store Inventory
             </div>
-            <h1 className="mt-3 text-3xl font-extrabold tracking-tight sm:text-4xl text-white">
+            <h1 className="mt-3 text-3xl font-bold tracking-tight sm:text-4xl text-white">
               My Catalog
             </h1>
             <p className="mt-1 text-sm text-slate-300">
@@ -75,7 +75,7 @@ export default function CatalogPage() {
 
           <button
             onClick={() => setShowModal(true)}
-            className="group relative inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:from-orange-600 hover:to-amber-600 hover:shadow-orange-500/25 hover:-translate-y-0.5 active:translate-y-0"
+            className="cursor-pointer group relative inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-5 py-3 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:from-orange-600 hover:to-amber-600 hover:shadow-orange-500/25 hover:-translate-y-0.5 active:translate-y-0"
           >
             <span className="flex h-5 w-5 items-center justify-center rounded-lg bg-white/20 transition-transform group-hover:rotate-90">
               +
@@ -114,7 +114,7 @@ export default function CatalogPage() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
+              className={`rounded-lg cursor-pointer px-3.5 py-1.5 text-xs font-semibold transition-all duration-200 ${
                 activeCategory === cat
                   ? "bg-white text-slate-900 shadow-sm ring-1 ring-slate-900/5"
                   : "text-slate-600 hover:text-slate-900 hover:bg-white/50"
@@ -297,7 +297,7 @@ export default function CatalogPage() {
                       <td className="py-3.5 px-6 text-right">
                         <div className="flex items-center justify-end gap-1.5">
                           <button
-                            className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition-colors hover:bg-indigo-50 hover:text-indigo-600"
+                            className="cursor-pointer grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition-colors hover:bg-indigo-50 hover:text-indigo-600"
                             title="Edit"
                           >
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4">
@@ -307,7 +307,7 @@ export default function CatalogPage() {
                           </button>
                           <button
                             onClick={() => setDeleteTarget(p)}
-                            className="grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
+                            className="cursor-pointer grid h-8 w-8 place-items-center rounded-lg text-slate-400 transition-colors hover:bg-rose-50 hover:text-rose-600"
                             title="Remove"
                           >
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4">
@@ -356,13 +356,13 @@ export default function CatalogPage() {
             <div className="flex gap-2 bg-[var(--color-brand-cream)]/40 p-4">
               <button
                 onClick={() => setDeleteTarget(null)}
-                className="flex-1 rounded-lg border border-[var(--color-line)] bg-white py-2 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-gray-50"
+                className="cursor-pointer flex-1 rounded-lg border border-[var(--color-line)] bg-white py-2 text-sm font-medium text-[var(--color-ink)] transition-colors hover:bg-gray-50"
               >
                 Cancel
               </button>
               <button
                 onClick={handleDelete}
-                className="flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700"
+                className="cursor-pointer flex-1 rounded-lg bg-red-600 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700"
               >
                 Remove
               </button>
