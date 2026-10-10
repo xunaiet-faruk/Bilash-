@@ -4,8 +4,8 @@ import { useState, useMemo, useEffect, useRef } from "react";
 import Link from "next/link";
 
 /* ============================================================
-   HARDCODED DATA — পরে API দিয়ে replace করবা
-   waitingOn: "you" = reseller reply দিতে হবে, "support" = admin এর হাতে
+   HARDCODED DATA — replace with API later
+   waitingOn: "you" = reseller must reply, "support" = admin's turn
    ============================================================ */
 const TICKETS = [
   {
@@ -55,27 +55,26 @@ const TICKETS = [
 ];
 
 const REASONS = [
-  { id: "order", label: "Order", icon: "📦", hint: "Order ID দিলে আমরা দ্রুত খুঁজে পাব।" },
-  { id: "payout", label: "Payout", icon: "💸", hint: "Withdraw request এর পর ২-৩ business days লাগে (শুক্র-শনি বাদে)।" },
-  { id: "product", label: "Product", icon: "🏷️", hint: "Product এর নাম বা link দিলে সুবিধা হয়।" },
-  { id: "account", label: "Account", icon: "👤", hint: "কোন page এ সমস্যা হচ্ছে সেটা লিখে দিন।" },
-  { id: "technical", label: "Technical", icon: "🛠️", hint: "Screenshot attach করলে সমস্যা বুঝতে সময় কম লাগে।" },
-  { id: "other", label: "Something else", icon: "💬", hint: "যা জানতে চান সহজ ভাষায় লিখে দিন।" },
+  { id: "order", label: "Order", icon: "📦", hint: "Include the order ID so we can find it faster." },
+  { id: "payout", label: "Payout", icon: "💸", hint: "Payouts arrive in 2-3 business days (Friday–Saturday excluded)." },
+  { id: "product", label: "Product", icon: "🏷️", hint: "Add the product name or link to help us locate it." },
+  { id: "account", label: "Account", icon: "👤", hint: "Tell us which page you were on when the issue happened." },
+  { id: "technical", label: "Technical", icon: "🛠️", hint: "A screenshot helps us resolve faster." },
+  { id: "other", label: "Something else", icon: "💬", hint: "Just describe it clearly — we'll help." },
 ];
 
 const FAQ = [
-  { q: "Payout কত দিনে আসে?", a: "Withdraw request এর পর ২-৩ business days (শুক্র-শনি বাদে)।" },
-  { q: "Order cancel করলে টাকা কখন ফেরত আসবে?", a: "Cancel হওয়ার ১-২ দিনের মধ্যে wallet এ ফেরত আসে।" },
-  { q: "Commission rate কত?", a: "Category অনুযায়ী ৫-১০%। প্রতি product এ দেখানো থাকে।" },
-  { q: "Bank details কোথায় update করব?", a: "Profile → Bank Details এ গিয়ে account name ও number update করুন।" },
+  { q: "How long does a payout take?", a: "2-3 business days after the request (Friday & Saturday excluded)." },
+  { q: "When will I get a refund for a cancelled order?", a: "Within 1-2 days, the amount returns to your wallet." },
+  { q: "What is the commission rate?", a: "5-10% depending on the category. Each product shows its rate." },
+  { q: "How do I update my bank details?", a: "Go to Profile → Bank Details and update the account name and number." },
 ];
 
 const STATUS_LABEL = { open: "Open", in_progress: "In progress", resolved: "Resolved" };
-const STATUS_DOT = { open: "bg-red-500", in_progress: "bg-amber-500", resolved: "bg-brand-teal" };
+const STATUS_DOT = { open: "bg-red-500", in_progress: "bg-amber-500", resolved: "bg-emerald-500" };
 
 const reasonOf = (id) => REASONS.find((r) => r.id === id);
 
-/* Support hours: Sat–Thu, 10am–8pm (Dhaka time) */
 function isSupportOnline() {
   const parts = new Intl.DateTimeFormat("en-US", {
     timeZone: "Asia/Dhaka",
@@ -94,7 +93,7 @@ function isSupportOnline() {
 export default function SupportPage() {
   const [tickets, setTickets] = useState(TICKETS);
   const [query, setQuery] = useState("");
-  const [drawer, setDrawer] = useState(null); // { reason, subject } | null
+  const [drawer, setDrawer] = useState(null);
   const [showResolved, setShowResolved] = useState(false);
   const [toast, setToast] = useState(null);
   const [online, setOnline] = useState(null);
@@ -106,7 +105,6 @@ export default function SupportPage() {
     return () => clearInterval(t);
   }, []);
 
-  // "/" focuses the search
   useEffect(() => {
     const onKey = (e) => {
       const tag = document.activeElement?.tagName;
@@ -120,6 +118,7 @@ export default function SupportPage() {
   }, []);
 
   const q = query.trim();
+
   const answers = useMemo(() => {
     const s = q.toLowerCase();
     if (!s) return [];
@@ -144,133 +143,177 @@ export default function SupportPage() {
   };
 
   return (
-    <div className="mx-auto flex max-w-4xl flex-col gap-10">
+    <div className="mx-auto flex max-w-5xl flex-col gap-8">
       {toast && (
         <div
           role="status"
-          className="fixed right-4 top-4 z-[60] flex items-center gap-3 rounded-2xl bg-brand-navy px-5 py-3 text-sm font-semibold text-white shadow-2xl sm:right-6 sm:top-6"
+          className="fixed right-4 top-4 z-[60] flex items-center gap-3 rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-2xl sm:right-6 sm:top-6"
         >
-          <span className="grid h-6 w-6 place-items-center rounded-full bg-brand-teal text-xs">✓</span>
+          <span className="grid h-6 w-6 place-items-center rounded-full bg-emerald-500 text-xs">✓</span>
           {toast}
         </div>
       )}
 
-      {/* ============ HELP HERO ============ */}
-      <section className="rounded-[2rem] bg-brand-cream px-5 py-10 sm:px-12 sm:py-14">
-        <h1 className="mx-auto max-w-xl text-center text-3xl font-semibold tracking-tight text-brand-navy sm:text-4xl">
-          How can we help?
-        </h1>
-        <p className="mx-auto mt-3 max-w-md text-center text-[15px] text-ink/60">
-          Search for an answer first. If it's not there, we'll open a ticket together.
-        </p>
+      {/* ============ HERO ============ */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-900 via-slate-900 to-slate-800 px-6 py-12 text-white sm:px-12 sm:py-16">
+        {/* Ambient glows */}
+        <div className="pointer-events-none absolute -right-24 -top-24 h-72 w-72 rounded-full bg-orange-500/25 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-24 -left-24 h-72 w-72 rounded-full bg-amber-500/10 blur-3xl" />
 
-        {/* Search */}
-        <div className="relative mx-auto mt-7 max-w-xl">
-          <svg
-            className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-ink/35"
-            viewBox="0 0 20 20"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.8"
-            aria-hidden
-          >
-            <circle cx="9" cy="9" r="6" />
-            <path d="m14 14 4 4" strokeLinecap="round" />
-          </svg>
-          <input
-            ref={searchRef}
-            type="search"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Payout, order, commission…"
-            aria-label="Search help"
-            className="w-full rounded-2xl border border-line bg-white py-4 pl-13 pr-12 text-base text-ink shadow-sm outline-none transition-shadow placeholder:text-ink/35 focus:border-brand-orange focus:shadow-md"
-            style={{ paddingLeft: "3.25rem" }}
-          />
-          <kbd className="pointer-events-none absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-md border border-line px-1.5 text-[11px] text-ink/40 sm:block">
-            /
-          </kbd>
-        </div>
+        {/* Subtle dot texture */}
+        <div
+          className="pointer-events-none absolute inset-0 opacity-[0.04]"
+          style={{
+            backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)",
+            backgroundSize: "20px 20px",
+          }}
+        />
 
-        {/* Live results OR topics */}
-        <div className="mx-auto mt-4 max-w-xl">
-          {q ? (
-            <div className="overflow-hidden rounded-2xl border border-line bg-white text-left">
-              {answers.map((f) => (
-                <div key={f.q} className="border-b border-line px-5 py-4">
-                  <p className="text-sm font-semibold text-ink">{f.q}</p>
-                  <p className="mt-1 text-[13px] leading-relaxed text-ink/60">{f.a}</p>
-                </div>
-              ))}
-              <button
-                type="button"
-                onClick={() => setDrawer({ reason: "other", subject: q })}
-                className="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left transition-colors hover:bg-brand-cream/60"
-              >
-                <span className="text-sm text-ink/70">
-                  {answers.length ? "Still need help?" : "No answer found."}{" "}
-                  <span className="font-semibold text-brand-orange">
-                    Ask support about “{q.length > 28 ? `${q.slice(0, 28)}…` : q}”
-                  </span>
-                </span>
-                <span aria-hidden className="text-ink/35">›</span>
-              </button>
-            </div>
-          ) : (
-            <div className="flex flex-wrap justify-center gap-2">
-              {REASONS.map((r) => (
+        <div className="relative">
+          <div className="mx-auto flex max-w-xl items-center justify-center gap-2">
+            <span className="grid h-6 w-6 place-items-center rounded-full bg-orange-500/20 text-xs">
+              🎧
+            </span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-orange-300">
+              Support Center
+            </span>
+          </div>
+          <h1 className="mx-auto mt-3 max-w-xl text-center text-3xl font-semibold tracking-tight sm:text-4xl">
+            How can we help?
+          </h1>
+          <p className="mx-auto mt-3 max-w-md text-center text-[15px] text-white/60">
+            Search for an answer first. If it's not there, we'll open a ticket together.
+          </p>
+
+          {/* Search bar */}
+          <div className="relative mx-auto mt-7 max-w-xl">
+            <svg
+              className="pointer-events-none absolute left-5 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400"
+              viewBox="0 0 20 20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+            >
+              <circle cx="9" cy="9" r="6" />
+              <path d="m14 14 4 4" strokeLinecap="round" />
+            </svg>
+            <input
+              ref={searchRef}
+              type="search"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search — payout, order, commission..."
+              aria-label="Search help"
+              className="w-full rounded-2xl border-0 bg-white py-4 pr-12 text-base text-slate-900 shadow-xl outline-none ring-2 ring-transparent transition-all placeholder:text-slate-400 focus:ring-orange-500"
+              style={{ paddingLeft: "3.25rem" }}
+            />
+            <kbd className="pointer-events-none absolute right-4 top-1/2 hidden -translate-y-1/2 rounded-md border border-slate-200 bg-slate-50 px-1.5 py-0.5 text-[11px] text-slate-400 sm:block">
+              /
+            </kbd>
+          </div>
+
+          {/* Search results OR topic pills */}
+          <div className="mx-auto mt-4 max-w-xl">
+            {q ? (
+              <div className="overflow-hidden rounded-2xl bg-white text-left text-slate-900 shadow-xl">
+                {answers.map((f) => (
+                  <div key={f.q} className="border-b border-slate-100 px-5 py-4">
+                    <p className="text-sm font-semibold">{f.q}</p>
+                    <p className="mt-1 text-[13px] leading-relaxed text-slate-600">{f.a}</p>
+                  </div>
+                ))}
                 <button
-                  key={r.id}
                   type="button"
-                  onClick={() => setDrawer({ reason: r.id, subject: "" })}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm font-medium text-ink/75 transition-colors hover:border-brand-navy hover:text-brand-navy"
+                  onClick={() => setDrawer({ reason: "other", subject: q })}
+                  className="flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-4 text-left transition-colors hover:bg-slate-50"
                 >
-                  <span aria-hidden>{r.icon}</span>
-                  {r.label}
+                  <span className="text-sm text-slate-600">
+                    {answers.length ? "Still need help?" : "No answer found."}{" "}
+                    <span className="font-semibold text-orange-600">
+                      Ask about "{q.length > 28 ? `${q.slice(0, 28)}…` : q}"
+                    </span>
+                  </span>
+                  <span className="text-slate-400">›</span>
                 </button>
-              ))}
-            </div>
-          )}
-        </div>
+              </div>
+            ) : (
+              <div className="flex flex-wrap justify-center gap-2">
+                {REASONS.slice(0, 5).map((r) => (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => setDrawer({ reason: r.id, subject: "" })}
+                    className="inline-flex cursor-pointer items-center gap-2 rounded-full border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white/85 backdrop-blur transition-all hover:-translate-y-0.5 hover:border-white/40 hover:bg-white/10"
+                  >
+                    <span>{r.icon}</span>
+                    {r.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
-        <p className="mt-7 flex items-center justify-center gap-2 text-[13px] text-ink/50">
-          <span
-            className={`h-2 w-2 rounded-full ${
-              online === null ? "bg-ink/20" : online ? "bg-brand-teal" : "bg-ink/30"
-            }`}
-          />
-          {online === null
-            ? "Checking support hours…"
-            : online
-              ? "Support is online. Usually replies within 4 hours."
-              : "Support is offline. We reply Saturday to Thursday, 10 AM – 8 PM."}
-        </p>
+          {/* Online status */}
+          <p className="mt-7 flex items-center justify-center gap-2 text-[13px] text-white/50">
+            <span
+              className={`h-2 w-2 rounded-full ${
+                online === null
+                  ? "bg-white/30"
+                  : online
+                  ? "bg-emerald-400"
+                  : "bg-white/40"
+              }`}
+            />
+            {online === null
+              ? "Checking support hours..."
+              : online
+              ? "Support is online — usually replies in 4 hours"
+              : "Support is offline — back Saturday to Thursday, 10 AM to 8 PM"}
+          </p>
+        </div>
       </section>
 
       {/* ============ YOUR TICKETS ============ */}
       <section>
-        <div className="flex items-center justify-between gap-4">
-          <h2 className="text-xl font-semibold tracking-tight text-ink">Your tickets</h2>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+              Your tickets
+            </h2>
+            <p className="mt-0.5 text-[13px] text-slate-500">
+              {tickets.length === 0
+                ? "No tickets yet"
+                : `${tickets.length} total · ${
+                    groups.you.length + groups.support.length
+                  } active`}
+            </p>
+          </div>
           <button
             type="button"
             onClick={() => setDrawer({ reason: "order", subject: "" })}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-brand-orange px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-brand-orange-dark focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-orange"
+            className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 px-4 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40"
           >
-            <span aria-hidden>+</span> New ticket
+            <span className="text-base leading-none">+</span>
+            New ticket
           </button>
         </div>
 
         {tickets.length === 0 ? (
-          <div className="mt-4 rounded-2xl border border-dashed border-line px-6 py-14 text-center">
-            <p className="text-sm font-medium text-ink">No tickets yet</p>
-            <p className="mt-1 text-xs text-ink/50">
+          <div className="mt-4 rounded-2xl border border-dashed border-slate-200 bg-white px-6 py-14 text-center">
+            <p className="text-3xl">🎫</p>
+            <p className="mt-3 text-sm font-medium text-slate-900">No tickets yet</p>
+            <p className="mt-1 text-xs text-slate-500">
               If something goes wrong, open a ticket and we'll reply here.
             </p>
           </div>
         ) : (
           <div className="mt-4 flex flex-col gap-6">
             {groups.you.length > 0 && (
-              <TicketGroup title="Needs your reply" tone="orange" items={groups.you} />
+              <TicketGroup
+                title="Needs your reply"
+                tone="orange"
+                items={groups.you}
+              />
             )}
             {groups.support.length > 0 && (
               <TicketGroup title="With support" items={groups.support} />
@@ -280,12 +323,12 @@ export default function SupportPage() {
                 <button
                   type="button"
                   onClick={() => setShowResolved((v) => !v)}
-                  aria-expanded={showResolved}
-                  className="flex cursor-pointer items-center gap-2 text-sm font-medium text-ink/55 transition-colors hover:text-ink"
+                  className="flex cursor-pointer items-center gap-2 text-sm font-medium text-slate-500 transition-colors hover:text-slate-900"
                 >
                   <span
-                    aria-hidden
-                    className={`inline-block transition-transform ${showResolved ? "rotate-90" : ""}`}
+                    className={`inline-block transition-transform ${
+                      showResolved ? "rotate-90" : ""
+                    }`}
                   >
                     ›
                   </span>
@@ -305,23 +348,24 @@ export default function SupportPage() {
       {/* ============ FAQ ============ */}
       {!q && (
         <section className="pb-6">
-          <h2 className="text-xl font-semibold tracking-tight text-ink">Quick answers</h2>
-          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <h2 className="text-xl font-semibold tracking-tight text-slate-900">
+            Quick answers
+          </h2>
+          <div className="mt-4 grid gap-2.5">
             {FAQ.map((f) => (
               <details
                 key={f.q}
-                className="group rounded-2xl border border-line bg-white px-5 py-4 open:border-brand-navy/25"
+                className="group rounded-2xl border border-slate-200 bg-white px-5 py-4 transition-all open:border-orange-300 open:bg-orange-50/40"
               >
-                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium text-ink [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center justify-between gap-3 text-sm font-medium text-slate-900 [&::-webkit-details-marker]:hidden">
                   {f.q}
-                  <span
-                    aria-hidden
-                    className="text-ink/35 transition-transform group-open:rotate-45"
-                  >
+                  <span className="grid h-6 w-6 shrink-0 place-items-center rounded-full bg-slate-100 text-slate-400 transition-all group-open:rotate-45 group-open:bg-orange-500 group-open:text-white">
                     +
                   </span>
                 </summary>
-                <p className="mt-3 text-[13px] leading-relaxed text-ink/60">{f.a}</p>
+                <p className="mt-3 text-[13px] leading-relaxed text-slate-600">
+                  {f.a}
+                </p>
               </details>
             ))}
           </div>
@@ -349,17 +393,24 @@ function TicketGroup({ title, tone, items, muted }) {
       {title && (
         <p
           className={`mb-2 flex items-center gap-2 text-sm font-semibold ${
-            tone === "orange" ? "text-brand-orange-dark" : "text-ink/70"
+            tone === "orange" ? "text-orange-700" : "text-slate-700"
           }`}
         >
-          {tone === "orange" && <span className="h-2 w-2 rounded-full bg-brand-orange" />}
+          {tone === "orange" && (
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-orange-400 opacity-60" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-orange-500" />
+            </span>
+          )}
           {title}
-          <span className="font-normal tabular-nums text-ink/40">{items.length}</span>
+          <span className="font-normal tabular-nums text-slate-400">
+            {items.length}
+          </span>
         </p>
       )}
       <ul
-        className={`divide-y divide-line overflow-hidden rounded-2xl border bg-white ${
-          tone === "orange" ? "border-brand-orange/40" : "border-line"
+        className={`divide-y divide-slate-100 overflow-hidden rounded-2xl border bg-white ${
+          tone === "orange" ? "border-orange-200" : "border-slate-200"
         } ${muted ? "opacity-80" : ""}`}
       >
         {items.map((t) => (
@@ -372,38 +423,49 @@ function TicketGroup({ title, tone, items, muted }) {
 
 function TicketRow({ t }) {
   const reason = reasonOf(t.reason);
+  const yourTurn = t.waitingOn === "you" && t.status !== "resolved";
+
   return (
     <li>
       <Link
         href={`/reseller/dashboard/support/${t.id}`}
-        className="group flex items-center gap-4 px-4 py-4 transition-colors hover:bg-brand-cream/60 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-brand-orange sm:px-5"
+        className="group flex items-center gap-4 px-4 py-4 transition-colors hover:bg-slate-50 focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-orange-500 sm:px-5"
       >
-        <span aria-hidden className="text-xl">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-orange-50 text-xl">
           {reason?.icon ?? "🎫"}
         </span>
 
         <div className="min-w-0 flex-1">
-          <p className="truncate text-[15px] font-semibold text-ink">{t.subject}</p>
-          <p className="mt-0.5 truncate text-sm text-ink/55">{t.lastMessage}</p>
-          <p className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink/45">
-            <span>{t.id}</span>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="truncate text-[15px] font-semibold text-slate-900">
+              {t.subject}
+            </p>
+            {yourTurn && (
+              <span className="shrink-0 rounded-full bg-gradient-to-r from-orange-500 to-amber-500 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
+                Your turn
+              </span>
+            )}
+          </div>
+          <p className="mt-0.5 truncate text-sm text-slate-500">{t.lastMessage}</p>
+          <div className="mt-1.5 flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-slate-400">
+            <span className="font-mono">{t.id}</span>
             <span className="inline-flex items-center gap-1.5">
               <span className={`h-1.5 w-1.5 rounded-full ${STATUS_DOT[t.status]}`} />
               {STATUS_LABEL[t.status]}
             </span>
             {t.orderId && <span>Order {t.orderId}</span>}
-          </p>
+          </div>
         </div>
 
-        <div className="hidden shrink-0 flex-col items-end gap-1 text-xs text-ink/45 sm:flex">
+        <div className="hidden shrink-0 flex-col items-end gap-1 text-[11px] text-slate-400 sm:flex">
           <span>{t.updatedAt}</span>
-          <span>💬 {t.messageCount}</span>
+          <span className="inline-flex items-center gap-1">
+            <span>💬</span>
+            {t.messageCount}
+          </span>
         </div>
 
-        <span
-          aria-hidden
-          className="text-ink/25 transition-transform group-hover:translate-x-0.5 group-hover:text-ink/60"
-        >
+        <span className="text-slate-300 transition-transform group-hover:translate-x-0.5 group-hover:text-slate-500">
           ›
         </span>
       </Link>
@@ -412,7 +474,7 @@ function TicketRow({ t }) {
 }
 
 /* ============================================================
-   NEW TICKET DRAWER (slides in from the right)
+   NEW TICKET DRAWER
    ============================================================ */
 const MAX_FILES = 3;
 const MAX_MB = 5;
@@ -436,7 +498,6 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
   const canSubmit = form.subject.trim() && form.message.trim() && !submitting;
   const reason = reasonOf(form.reason);
 
-  // slide-in, Esc to close, lock background scroll
   useEffect(() => {
     const raf = requestAnimationFrame(() => setEntered(true));
     subjectRef.current?.focus();
@@ -465,8 +526,6 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
     if (!canSubmit) return;
     setSubmitting(true);
     setError(null);
-
-    // Simulate network delay — পরে API call বসাবা
     setTimeout(() => {
       const id = `TKT-${Math.floor(1000 + Math.random() * 9000)}`;
       onCreated({
@@ -484,19 +543,20 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
   };
 
   const field =
-    "mt-1.5 w-full rounded-xl border border-line bg-white px-3.5 py-2.5 text-sm outline-none transition-colors placeholder:text-ink/35 focus:border-brand-orange";
-  const label = "text-xs font-medium text-ink/70";
+    "mt-1.5 w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm outline-none transition-all placeholder:text-slate-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-100";
+  const label = "text-xs font-medium text-slate-700";
 
   return (
     <div className="fixed inset-0 z-50" role="presentation">
-      {/* backdrop */}
+      {/* Backdrop with blur */}
       <div
         onClick={() => !submitting && onClose()}
-        className={`absolute inset-0 bg-brand-navy/50 transition-opacity duration-300 motion-reduce:transition-none ${
+        className={`absolute inset-0 bg-slate-900/50 backdrop-blur-sm transition-opacity duration-300 motion-reduce:transition-none ${
           entered ? "opacity-100" : "opacity-0"
         }`}
       />
 
+      {/* Drawer */}
       <aside
         role="dialog"
         aria-modal="true"
@@ -505,25 +565,40 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
           entered ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex items-start justify-between gap-4 px-6 pb-4 pt-6">
-          <div>
-            <h2 id="new-ticket-title" className="text-xl font-semibold tracking-tight text-ink">
-              New ticket
-            </h2>
-            <p className="mt-1 text-[13px] text-ink/50">Our team replies here, in the ticket.</p>
+        {/* Header */}
+        <div className="relative flex items-start justify-between gap-4 border-b border-slate-100 px-6 pb-5 pt-6">
+          {/* Subtle top accent */}
+          <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-orange-500 to-amber-500" />
+
+          <div className="flex items-start gap-3">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-orange-100 to-orange-200 text-xl">
+              {reason?.icon ?? "🎫"}
+            </span>
+            <div>
+              <h2
+                id="new-ticket-title"
+                className="text-lg font-semibold tracking-tight text-slate-900"
+              >
+                New ticket
+              </h2>
+              <p className="mt-0.5 text-[13px] text-slate-500">
+                Our team replies here in the ticket.
+              </p>
+            </div>
           </div>
           <button
             type="button"
             onClick={onClose}
             disabled={submitting}
             aria-label="Close"
-            className="grid h-9 w-9 cursor-pointer place-items-center rounded-full text-ink/45 transition-colors hover:bg-ink/5 disabled:opacity-40"
+            className="grid h-9 w-9 cursor-pointer place-items-center rounded-full text-slate-400 transition-colors hover:bg-slate-100 disabled:opacity-40"
           >
             ✕
           </button>
         </div>
 
-        <div className="flex-1 space-y-5 overflow-y-auto px-6 pb-6">
+        {/* Body */}
+        <div className="flex-1 space-y-5 overflow-y-auto px-6 py-6">
           {/* Reason pills */}
           <div>
             <span className={label}>What is it about?</span>
@@ -535,21 +610,20 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
                     key={r.id}
                     type="button"
                     onClick={() => set("reason", r.id)}
-                    aria-pressed={on}
-                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-colors ${
+                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-xs font-medium transition-all ${
                       on
-                        ? "border-brand-navy bg-brand-navy text-white"
-                        : "border-line text-ink/65 hover:border-ink/30"
+                        ? "border-slate-900 bg-slate-900 text-white shadow-md"
+                        : "border-slate-200 text-slate-600 hover:border-slate-400"
                     }`}
                   >
-                    <span aria-hidden>{r.icon}</span>
+                    <span>{r.icon}</span>
                     {r.label}
                   </button>
                 );
               })}
             </div>
-            <p className="mt-2.5 rounded-xl bg-brand-cream px-3.5 py-2.5 text-[13px] leading-relaxed text-ink/65">
-              {reason.hint}
+            <p className="mt-2.5 rounded-xl bg-orange-50 px-3.5 py-2.5 text-[13px] leading-relaxed text-slate-700">
+              💡 {reason.hint}
             </p>
           </div>
 
@@ -567,7 +641,7 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
 
           <label className="block">
             <span className={label}>
-              Order ID <span className="text-ink/40">(if any)</span>
+              Order ID <span className="text-slate-400">(if any)</span>
             </span>
             <input
               value={form.orderId}
@@ -580,7 +654,7 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
           <label className="block">
             <span className="flex items-center justify-between">
               <span className={label}>Details</span>
-              <span className="text-[11px] tabular-nums text-ink/35">
+              <span className="text-[11px] tabular-nums text-slate-400">
                 {form.message.length}/{MAX_MESSAGE}
               </span>
             </span>
@@ -611,45 +685,48 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
                 type="button"
                 onClick={() => fileRef.current?.click()}
                 disabled={files.length >= MAX_FILES}
-                className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-ink/25 px-3.5 py-2 text-xs font-medium text-ink/65 transition-colors hover:border-brand-orange hover:text-brand-orange disabled:cursor-not-allowed disabled:opacity-40"
+                className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-dashed border-slate-300 px-3.5 py-2 text-xs font-medium text-slate-600 transition-colors hover:border-orange-500 hover:text-orange-600 disabled:cursor-not-allowed disabled:opacity-40"
               >
                 📎 Attach screenshot or PDF
               </button>
               {files.map((f, i) => (
                 <span
                   key={`${f.name}-${i}`}
-                  className="inline-flex max-w-[11rem] items-center gap-1.5 rounded-full bg-brand-cream py-1 pl-3 pr-1.5 text-xs text-ink/70"
+                  className="inline-flex max-w-[11rem] items-center gap-1.5 rounded-full bg-slate-100 py-1 pl-3 pr-1.5 text-xs text-slate-700"
                 >
                   <span className="truncate">{f.name}</span>
                   <button
                     type="button"
-                    aria-label={`Remove ${f.name}`}
                     onClick={() => setFiles((p) => p.filter((_, j) => j !== i))}
-                    className="grid h-4 w-4 cursor-pointer place-items-center rounded-full text-[10px] text-ink/50 hover:bg-ink/10"
+                    className="grid h-4 w-4 cursor-pointer place-items-center rounded-full text-[10px] text-slate-500 hover:bg-slate-200"
                   >
                     ✕
                   </button>
                 </span>
               ))}
             </div>
-            <p className="mt-1.5 text-[11px] text-ink/40">
+            <p className="mt-1.5 text-[11px] text-slate-400">
               Up to {MAX_FILES} files, {MAX_MB} MB each.
             </p>
           </div>
 
           {error && (
-            <p role="alert" className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700">
+            <p
+              role="alert"
+              className="rounded-lg bg-red-50 px-3 py-2 text-xs text-red-700"
+            >
               {error}
             </p>
           )}
         </div>
 
-        <div className="flex gap-3 border-t border-line px-6 py-4">
+        {/* Footer */}
+        <div className="flex gap-3 border-t border-slate-100 bg-slate-50 px-6 py-4">
           <button
             type="button"
             onClick={onClose}
             disabled={submitting}
-            className="flex-1 cursor-pointer rounded-xl border border-line bg-white py-2.5 text-sm font-semibold text-ink/70 transition-colors hover:bg-gray-50 disabled:opacity-50"
+            className="flex-1 cursor-pointer rounded-xl border border-slate-200 bg-white py-2.5 text-sm font-semibold text-slate-700 transition-colors hover:bg-slate-100 disabled:opacity-50"
           >
             Cancel
           </button>
@@ -657,9 +734,9 @@ function NewTicketDrawer({ initialReason, initialSubject, onClose, onCreated }) 
             type="button"
             onClick={submit}
             disabled={!canSubmit}
-            className="flex-[1.6] cursor-pointer rounded-xl bg-brand-orange py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-orange-dark disabled:cursor-not-allowed disabled:bg-ink/10 disabled:text-ink/30"
+            className="flex-[1.6] cursor-pointer rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 py-2.5 text-sm font-semibold text-white shadow-lg shadow-orange-500/25 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/40 disabled:cursor-not-allowed disabled:bg-none disabled:bg-slate-200 disabled:text-slate-400 disabled:shadow-none disabled:hover:translate-y-0"
           >
-            {submitting ? "Opening…" : "Open ticket"}
+            {submitting ? "Opening..." : "Open ticket"}
           </button>
         </div>
       </aside>

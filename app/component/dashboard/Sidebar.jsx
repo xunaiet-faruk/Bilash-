@@ -21,6 +21,10 @@ import {
   Share2,
   User,
   ChevronDown,
+  Search,
+  TrendingUp,
+  ShieldCheck,
+  Bell,
 } from "lucide-react";
 
 /* ============================================================
@@ -69,21 +73,28 @@ const NAV = {
       ],
     },
   ],
-  reseller: [
+    reseller: [
     {
       group: "Overview",
       items: [
         { label: "Dashboard", href: "", icon: Home },
         { label: "Wallet", href: "/wallet", icon: CreditCard },
+        { label: "Earnings", href: "/earnings", icon: TrendingUp },
       ],
     },
     {
-      group: "Reseller",
+      group: "Selling",
       items: [
-        { label: "My Catalog", href: "/catalog", icon: Package },
+        { label: "My Products", href: "/my-products", icon: Search },
         { label: "Margin Calculator", href: "/margin", icon: BarChart2 },
+        { label: "My Catalog", href: "/catalog", icon: Package },
         { label: "Share Links", href: "/share-link", icon: Share2 },
-        { label: "My-products", href: "/my-products", icon: ShoppingBag },
+      ],
+    },
+    {
+      group: "Orders",
+      items: [
+        { label: "My Orders", href: "/orders", icon: Receipt },
       ],
     },
     {
@@ -91,8 +102,9 @@ const NAV = {
       items: [
         { label: "Profile", href: "/profile", icon: User },
         { label: "Store Setup", href: "/setup", icon: Settings },
+        { label: "KYC", href: "/kyc", icon: ShieldCheck },
+        { label: "Notifications", href: "/notifications", icon: Bell },
         { label: "Support", href: "/support", icon: LifeBuoy },
-
       ],
     },
   ],
