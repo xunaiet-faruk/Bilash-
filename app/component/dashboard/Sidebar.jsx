@@ -91,6 +91,8 @@ const NAV = {
       items: [
         { label: "Profile", href: "/profile", icon: User },
         { label: "Store Setup", href: "/setup", icon: Settings },
+        { label: "Support", href: "/support", icon: LifeBuoy },
+
       ],
     },
   ],
