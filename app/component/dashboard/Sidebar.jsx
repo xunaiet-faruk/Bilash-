@@ -25,11 +25,10 @@ import {
   TrendingUp,
   ShieldCheck,
   Bell,
+  CirclePlus
 } from "lucide-react";
 
-/* ============================================================
-   NAV CONFIG — SRS Section 3.5 অনুযায়ী
-   ============================================================ */
+
 const NAV = {
   admin: [
     {
@@ -44,6 +43,7 @@ const NAV = {
       items: [
         { label: "Catalog & Approvals", href: "/catalog", icon: Package },
         { label: "Categories", href: "/categories", icon: Tag },
+        { label: "Add-Product", href: "/products/add", icon: CirclePlus },
         { label: "Orders", href: "/orders", icon: Receipt },
         { label: "Payout & Escrow", href: "/finance", icon: CreditCard },
       ],
