@@ -1,133 +1,133 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import SingleProductForm from "./SingleProductForm";
 import BulkImportSection from "./BulkImportSection";
 
+const TABS = [
+  {
+    id: "single",
+    label: "Single product",
+    hint: "Fill in one product with images",
+    icon: "M21 8l-9-5-9 5m18 0l-9 5m9-5v8l-9 5m0-8L3 8m9 5v8M3 8v8l9 5",
+  },
+  {
+    id: "bulk",
+    label: "Bulk import",
+    hint: "Upload a CSV or Excel file",
+    icon: "M3 5h18v14H3zM3 10h18M9 5v14",
+  },
+];
+
 export default function AddProductPage() {
   const router = useRouter();
-  const [mode, setMode] = useState("single"); // single | bulk
+  const [mode, setMode] = useState("single");
   const [toast, setToast] = useState(null);
+  const timer = useRef(null);
 
-  const handleSuccess = (message) => {
+  const handleSuccess = useCallback((message) => {
+    clearTimeout(timer.current);
     setToast(message);
-    setTimeout(() => setToast(null), 3500);
-  };
+    timer.current = setTimeout(() => setToast(null), 3500);
+  }, []);
+
+  useEffect(() => () => clearTimeout(timer.current), []);
 
   return (
-    <div className="mx-auto flex max-w-5xl flex-col gap-6">
+    <div className="mx-auto flex max-w-6xl flex-col gap-6">
       {/* Toast */}
-      {toast && (
-        <div className="fixed right-6 top-6 z-50 flex items-center gap-3 rounded-2xl bg-[var(--color-brand-navy)] px-5 py-3 text-sm font-semibold text-white shadow-2xl">
-          <span className="grid h-6 w-6 place-items-center rounded-full bg-[var(--color-brand-teal)] text-xs">
-            ✓
-          </span>
-          {toast}
-        </div>
-      )}
+      <div aria-live="polite" className="pointer-events-none fixed right-6 top-6 z-50">
+        {toast && (
+          <div className="pointer-events-auto flex items-center gap-3 rounded-xl bg-brand-navy px-4 py-3 text-sm font-medium text-white shadow-xl">
+            <span className="grid h-5 w-5 place-items-center rounded-full bg-brand-teal">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="h-3 w-3">
+                <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+            {toast}
+          </div>
+        )}
+      </div>
 
       {/* Header */}
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <header className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-[var(--color-brand-orange)]">
-            ◆ Products
-          </p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight text-[var(--color-ink)]">
-            Add Products
+          <nav className="text-xs text-ink/50">
+            <button
+              type="button"
+              onClick={() => router.push("/admin/dashboard/products")}
+              className="cursor-pointer hover:text-brand-orange"
+            >
+              Products
+            </button>
+            <span className="mx-1.5">/</span>
+            <span className="text-ink/80">Add</span>
+          </nav>
+          <h1 className="mt-2 text-2xl font-bold tracking-tight text-brand-navy sm:text-3xl">
+            Add products
           </h1>
-          <p className="mt-1.5 text-sm text-[var(--color-ink)]/55">
-            Add a single product or import many at once
+          <p className="mt-1 text-sm text-ink/60">
+            Add one product by hand, or import a whole catalogue from a spreadsheet.
           </p>
         </div>
 
         <button
           type="button"
           onClick={() => router.push("/admin/dashboard/products")}
-          className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-[var(--color-line)] bg-white px-4 py-2.5 text-sm font-semibold text-[var(--color-ink)]/70 transition-colors hover:bg-[var(--color-brand-cream)]"
+          className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-semibold text-ink/75 transition-colors hover:bg-brand-cream"
         >
-          ← Back to Products
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
+            <path d="M15 6l-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Back to products
         </button>
+      </header>
+
+      {/* Tabs */}
+      <div role="tablist" aria-label="Add mode" className="flex gap-1 border-b border-line">
+        {TABS.map((t) => {
+          const active = mode === t.id;
+          return (
+            <button
+              key={t.id}
+              role="tab"
+              type="button"
+              id={`tab-${t.id}`}
+              aria-selected={active}
+              aria-controls={`panel-${t.id}`}
+              onClick={() => setMode(t.id)}
+              className={`-mb-px flex cursor-pointer items-center gap-3 border-b-2 px-4 py-3 text-left transition-colors ${
+                active
+                  ? "border-brand-orange text-brand-navy"
+                  : "border-transparent text-ink/55 hover:text-ink"
+              }`}
+            >
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.8"
+                className={`h-5 w-5 shrink-0 ${active ? "text-brand-orange" : ""}`}
+              >
+                <path d={t.icon} strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>
+                <span className="block text-sm font-semibold">{t.label}</span>
+                <span className="hidden text-xs font-normal text-ink/50 sm:block">{t.hint}</span>
+              </span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Mode Tabs */}
-      <div className="grid grid-cols-2 gap-3">
-        <ModeCard
-          active={mode === "single"}
-          onClick={() => setMode("single")}
-          icon="📦"
-          title="Single Product"
-          description="Add one product with full details"
-        />
-        <ModeCard
-          active={mode === "bulk"}
-          onClick={() => setMode("bulk")}
-          icon="📊"
-          title="Bulk Import"
-          description="Upload CSV/Excel with many products"
-        />
+      {/* Panels: dui ta-i mounted thake, tai tab change korle data haray na */}
+      <div role="tabpanel" id="panel-single" aria-labelledby="tab-single" hidden={mode !== "single"}>
+        <SingleProductForm onSuccess={handleSuccess} />
       </div>
-
-      {/* Content */}
-      <div className="rounded-3xl border border-[var(--color-line)] bg-white p-6 sm:p-8">
-        {mode === "single" ? (
-          <SingleProductForm onSuccess={handleSuccess} />
-        ) : (
-          <BulkImportSection onSuccess={handleSuccess} />
-        )}
+      <div role="tabpanel" id="panel-bulk" aria-labelledby="tab-bulk" hidden={mode !== "bulk"}>
+        <BulkImportSection onSuccess={handleSuccess} />
       </div>
     </div>
-  );
-}
-
-/* ============================================================
-   MODE CARD
-   ============================================================ */
-function ModeCard({ active, onClick, icon, title, description }) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`group relative flex cursor-pointer items-start gap-4 overflow-hidden rounded-2xl border-2 p-5 text-left transition-all ${
-        active
-          ? "border-[var(--color-brand-orange)] bg-[var(--color-brand-orange)]/5"
-          : "border-[var(--color-line)] bg-white hover:border-[var(--color-ink)]/20"
-      }`}
-    >
-      {/* Check indicator */}
-      <span
-        className={`grid h-12 w-12 shrink-0 place-items-center rounded-xl text-2xl ${
-          active
-            ? "bg-[var(--color-brand-orange)] text-white"
-            : "bg-[var(--color-brand-cream)]"
-        }`}
-      >
-        {icon}
-      </span>
-
-      <div className="min-w-0 flex-1">
-        <div className="flex items-center gap-2">
-          <h3
-            className={`text-base font-bold ${
-              active ? "text-[var(--color-brand-orange-dark)]" : "text-[var(--color-ink)]"
-            }`}
-          >
-            {title}
-          </h3>
-          {active && (
-            <span className="rounded-full bg-[var(--color-brand-orange)] px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
-              Selected
-            </span>
-          )}
-        </div>
-        <p className="mt-1 text-xs text-[var(--color-ink)]/60">{description}</p>
-      </div>
-
-      {active && (
-        <span className="absolute right-4 top-4 grid h-6 w-6 place-items-center rounded-full bg-[var(--color-brand-orange)] text-xs font-bold text-white">
-          ✓
-        </span>
-      )}
-    </button>
   );
 }
