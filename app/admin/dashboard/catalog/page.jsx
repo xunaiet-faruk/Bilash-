@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState,useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 
 const STATS = [
   { label: "Pending", value: 24, tone: "amber", trend: "+5 today" },
@@ -358,6 +359,17 @@ export default function CatalogApprovalsPage() {
   const [query, setQuery] = useState("");
   const [imageIndex, setImageIndex] = useState(0);
   const [detailTab, setDetailTab] = useState("product");
+  const searchParams = useSearchParams();
+  const productParam = searchParams.get("product");
+
+
+    useEffect(() => {
+    if (productParam && PRODUCTS.some((p) => p.id === productParam)) {
+      setSelected(productParam);
+      setImageIndex(0);
+      setDetailTab("product");
+    }
+  }, [productParam]);
 
   const filtered = PRODUCTS.filter(
     (p) =>

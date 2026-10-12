@@ -74,7 +74,7 @@ export default function AddProductPage() {
 
         <button
           type="button"
-          onClick={() => router.push("/admin/dashboard/products")}
+          onClick={() => router.push("/admin/dashboard/allproducts")}
           className="inline-flex cursor-pointer items-center gap-2 rounded-lg border border-line bg-white px-4 py-2.5 text-sm font-semibold text-ink/75 transition-colors hover:bg-brand-cream"
         >
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">

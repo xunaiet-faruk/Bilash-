@@ -43,7 +43,8 @@ const NAV = {
       items: [
         { label: "Catalog & Approvals", href: "/catalog", icon: Package },
         { label: "Categories", href: "/categories", icon: Tag },
-        { label: "Add-Product", href: "/products/add", icon: CirclePlus },
+        { label: "Products", href: "/allproducts", icon: Package },
+        { label: "Add-Product", href: "/addproducts/add", icon: CirclePlus },
         { label: "Orders", href: "/orders", icon: Receipt },
         { label: "Payout & Escrow", href: "/finance", icon: CreditCard },
       ],
