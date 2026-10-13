@@ -24,6 +24,32 @@ async function request(path, { method = "GET", body, params } = {}) {
 }
 
 /* ═══════════════════════════════════════════════════════════
+   SHARED BUTTON STYLES
+   ═══════════════════════════════════════════════════════════ */
+const BTN = {
+  // 🟠 Primary — orange gradient
+  primary:
+    "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] px-4 py-2 text-sm font-semibold text-white shadow-md shadow-orange-500/25 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-orange-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none",
+  primaryLg:
+    "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] px-5 py-3 text-sm font-bold text-white shadow-lg shadow-orange-500/30 transition-all hover:-translate-y-0.5 hover:shadow-xl hover:shadow-orange-500/50 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none",
+  // 🟢 Success — emerald gradient
+  success:
+    "inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-emerald-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-emerald-500/25 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-emerald-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none",
+  // 🔴 Danger — red gradient
+  danger:
+    "inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-red-500 to-red-600 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-red-500/25 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-red-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none",
+  // ⚫ Dark — neutral gradient
+  dark:
+    "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-neutral-900 to-neutral-700 px-4 py-2 text-sm font-semibold text-white shadow-md shadow-neutral-900/20 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-neutral-900/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none",
+  // ⚪ Ghost — white with border
+  ghost:
+    "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition-all hover:-translate-y-0.5 hover:border-neutral-300 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0",
+  // 🟣 Violet — commission accent
+  violet:
+    "inline-flex cursor-pointer items-center justify-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-violet-600 px-5 py-2 text-sm font-bold text-white shadow-md shadow-violet-500/25 transition-all hover:-translate-y-0.5 hover:shadow-lg hover:shadow-violet-500/40 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0 disabled:shadow-none",
+};
+
+/* ═══════════════════════════════════════════════════════════
    HELPERS
    ═══════════════════════════════════════════════════════════ */
 const cx = (...a) => a.filter(Boolean).join(" ");
@@ -320,7 +346,6 @@ export default function FinancePage() {
 
   return (
     <div className="min-h-screen w-full">
-      {/* ═══ Sonner Toaster ═══ */}
       <Toaster
         position="bottom-center"
         toastOptions={{
@@ -352,11 +377,12 @@ export default function FinancePage() {
             </p>
           </div>
 
+          {/* 🟠 Refresh button — orange gradient */}
           <button
             type="button"
             onClick={reload}
             disabled={refreshing || loading}
-            className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 transition-all hover:border-neutral-300 hover:shadow-sm disabled:cursor-not-allowed disabled:opacity-50"
+            className={BTN.primary}
           >
             <Icon name="refresh" className={cx("h-4 w-4 transition-transform", refreshing && "animate-spin")} />
             Refresh
@@ -382,7 +408,7 @@ export default function FinancePage() {
           <>
             {/* ═══ BENTO GRID ═══ */}
             <div className="grid gap-3 grid-cols-2 lg:grid-cols-6">
-              {/* Big — Pending approvals */}
+              {/* Big — Pending */}
               <button
                 type="button"
                 onClick={() => setTab("payouts")}
@@ -403,7 +429,8 @@ export default function FinancePage() {
                       {t.pending.length > 0 ? "waiting for approval" : "all caught up"}
                     </p>
                   </div>
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-orange-50 text-orange-500 transition-transform group-hover:scale-110">
+                  {/* 🟠 Icon with gradient */}
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] text-white shadow-md shadow-orange-500/30 transition-transform group-hover:scale-110">
                     <Icon name="send" className="h-5 w-5" />
                   </span>
                 </div>
@@ -413,17 +440,17 @@ export default function FinancePage() {
                     {takaShort(t.queued)} queued
                   </span>
                   {t.overdue > 0 && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-orange-500 px-2.5 py-1 font-bold text-white">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] px-2.5 py-1 font-bold text-white shadow-sm">
                       <Icon name="clock" className="h-3 w-3" sw={2.5} />
                       {t.overdue} overdue
                     </span>
                   )}
                 </div>
 
-                <span className="absolute inset-x-5 bottom-0 h-0.5 rounded-t bg-orange-500 opacity-0 transition-opacity group-hover:opacity-100" />
+                <span className="absolute inset-x-5 bottom-0 h-0.5 rounded-t bg-gradient-to-r from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] opacity-0 transition-opacity group-hover:opacity-100" />
               </button>
 
-              {/* Escrow */}
+              {/* Big — Escrow */}
               <button
                 type="button"
                 onClick={() => setTab("escrow")}
@@ -444,7 +471,8 @@ export default function FinancePage() {
                       across {data.escrow.length} order{data.escrow.length !== 1 ? "s" : ""}
                     </p>
                   </div>
-                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-teal-50 text-teal-600 transition-transform group-hover:scale-110">
+                  {/* 🔵 Icon with gradient */}
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 text-white shadow-md shadow-teal-500/30 transition-transform group-hover:scale-110">
                     <Icon name="lock" className="h-5 w-5" />
                   </span>
                 </div>
@@ -454,14 +482,14 @@ export default function FinancePage() {
                     Auto-release cycle
                   </span>
                   {t.disputes > 0 && (
-                    <span className="inline-flex items-center gap-1 rounded-full bg-red-500 px-2.5 py-1 font-bold text-white">
+                    <span className="inline-flex items-center gap-1 rounded-full bg-gradient-to-r from-red-500 to-red-600 px-2.5 py-1 font-bold text-white shadow-sm">
                       <Icon name="alert" className="h-3 w-3" sw={2.5} />
                       {t.disputes} dispute{t.disputes > 1 ? "s" : ""}
                     </span>
                   )}
                 </div>
 
-                <span className="absolute inset-x-5 bottom-0 h-0.5 rounded-t bg-teal-500 opacity-0 transition-opacity group-hover:opacity-100" />
+                <span className="absolute inset-x-5 bottom-0 h-0.5 rounded-t bg-gradient-to-r from-teal-500 to-teal-600 opacity-0 transition-opacity group-hover:opacity-100" />
               </button>
 
               {/* Ready to pay */}
@@ -470,7 +498,7 @@ export default function FinancePage() {
                 onClick={() => setTab("payouts")}
                 className="group col-span-1 lg:col-span-2 cursor-pointer rounded-2xl border border-neutral-200 bg-white p-4 text-left transition-all hover:-translate-y-1 hover:border-neutral-300 hover:shadow-lg"
               >
-                <span className="grid h-9 w-9 place-items-center rounded-lg bg-blue-50 text-blue-600 transition-transform group-hover:scale-110">
+                <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 text-white shadow-md shadow-blue-500/30 transition-transform group-hover:scale-110">
                   <Icon name="wallet" className="h-4 w-4" />
                 </span>
                 <p className="mt-3 text-[11px] font-bold uppercase tracking-wider text-neutral-500">
@@ -490,7 +518,7 @@ export default function FinancePage() {
                 onClick={() => setTab("commission")}
                 className="group col-span-1 lg:col-span-2 cursor-pointer rounded-2xl border border-neutral-200 bg-white p-4 text-left transition-all hover:-translate-y-1 hover:border-neutral-300 hover:shadow-lg"
               >
-                <span className="grid h-9 w-9 place-items-center rounded-lg bg-violet-50 text-violet-600 transition-transform group-hover:scale-110">
+                <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-md shadow-violet-500/30 transition-transform group-hover:scale-110">
                   <Icon name="percent" className="h-4 w-4" />
                 </span>
                 <p className="mt-3 text-[11px] font-bold uppercase tracking-wider text-neutral-500">
@@ -510,7 +538,7 @@ export default function FinancePage() {
                 onClick={() => setTab("activity")}
                 className="group col-span-2 lg:col-span-2 cursor-pointer rounded-2xl border border-neutral-200 bg-white p-4 text-left transition-all hover:-translate-y-1 hover:border-neutral-300 hover:shadow-lg"
               >
-                <span className="grid h-9 w-9 place-items-center rounded-lg bg-neutral-100 text-neutral-600 transition-transform group-hover:scale-110">
+                <span className="grid h-9 w-9 place-items-center rounded-lg bg-gradient-to-br from-neutral-700 to-neutral-900 text-white shadow-md shadow-neutral-900/20 transition-transform group-hover:scale-110">
                   <Icon name="list" className="h-4 w-4" />
                 </span>
                 <p className="mt-3 text-[11px] font-bold uppercase tracking-wider text-neutral-500">
@@ -542,17 +570,17 @@ export default function FinancePage() {
                     className={cx(
                       "inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold transition-all",
                       active
-                        ? "bg-white text-neutral-900 shadow-sm"
+                        ? "bg-gradient-to-r from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] text-white shadow-md shadow-orange-500/25"
                         : "text-neutral-500 hover:text-neutral-900"
                     )}
                   >
-                    <Icon name={it.icon} className={cx("h-4 w-4", active && "text-orange-500")} />
+                    <Icon name={it.icon} className="h-4 w-4" />
                     {it.label}
                     {it.badge > 0 && (
                       <span
                         className={cx(
                           "rounded-full px-1.5 py-0.5 text-[10px] font-bold tabular-nums",
-                          it.danger ? "bg-red-500 text-white" : "bg-orange-500 text-white"
+                          active ? "bg-white/25 text-white" : it.danger ? "bg-red-500 text-white" : "bg-orange-500 text-white"
                         )}
                       >
                         {it.badge}
@@ -643,11 +671,13 @@ function PayoutsPanel({ data, reload, notify }) {
                 onClick={() => setLane(id)}
                 className={cx(
                   "inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all",
-                  on ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-900"
+                  on
+                    ? "bg-gradient-to-r from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] text-white shadow-md shadow-orange-500/25"
+                    : "text-neutral-500 hover:text-neutral-900"
                 )}
               >
                 {text}
-                <span className={cx("rounded-full px-1.5 text-[10px] font-bold tabular-nums", on ? "bg-neutral-900 text-white" : "bg-white text-neutral-500")}>
+                <span className={cx("rounded-full px-1.5 text-[10px] font-bold tabular-nums", on ? "bg-white/25 text-white" : "bg-white text-neutral-500")}>
                   {count}
                 </span>
               </button>
@@ -659,7 +689,7 @@ function PayoutsPanel({ data, reload, notify }) {
           <button
             type="button"
             onClick={() => setDialog({ kind: "approve", items: pending })}
-            className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg"
+            className={BTN.success}
           >
             <Icon name="check" className="h-4 w-4" />
             Approve all {pending.length}
@@ -672,11 +702,7 @@ function PayoutsPanel({ data, reload, notify }) {
           title={lane === "pending" ? "All caught up" : lane === "ready" ? "Nothing to pay" : "No history yet"}
           hint={query ? "No matches for your search." : lane === "pending" ? "No payout requests are waiting for approval." : undefined}
           action={lane === "pending" && ready.length > 0 ? (
-            <button
-              type="button"
-              onClick={() => setLane("ready")}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold text-white hover:shadow-lg"
-            >
+            <button type="button" onClick={() => setLane("ready")} className={BTN.primary}>
               See {ready.length} ready to pay
               <Icon name="arrow" className="h-3.5 w-3.5" />
             </button>
@@ -754,7 +780,7 @@ function PayoutRow({ p, onAction }) {
       )}
     >
       <div className="flex min-w-0 flex-1 basis-56 items-center gap-3">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-neutral-900 text-xs font-bold text-white">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-gradient-to-br from-[var(--color-brand-navy)] to-neutral-700 text-xs font-bold text-white shadow-md">
           {initials(p.name)}
         </span>
         <div className="min-w-0">
@@ -781,33 +807,36 @@ function PayoutRow({ p, onAction }) {
       <div className="flex min-w-[170px] justify-end gap-2">
         {p.status === "pending" && (
           <>
+            {/* 🔴 Reject — red gradient */}
             <button
               type="button"
               onClick={() => onAction("reject")}
-              className="cursor-pointer rounded-full border border-neutral-200 bg-white px-4 py-2 text-sm font-semibold text-neutral-600 transition hover:border-red-200 hover:bg-red-50 hover:text-red-600"
+              className={BTN.danger}
             >
               Reject
             </button>
+            {/* 🟢 Approve — emerald gradient */}
             <button
               type="button"
               onClick={() => onAction("approve")}
-              className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-600 hover:shadow-md"
+              className={BTN.success}
             >
               <Icon name="check" className="h-3.5 w-3.5" sw={2.5} /> Approve
             </button>
           </>
         )}
         {p.status === "approved" && (
+          /* ⚫ Mark as paid — neutral gradient */
           <button
             type="button"
             onClick={() => onAction("pay")}
-            className="inline-flex cursor-pointer items-center gap-1.5 rounded-full bg-neutral-900 px-4 py-2 text-sm font-semibold text-white transition hover:bg-neutral-800 hover:shadow-md"
+            className={BTN.dark}
           >
             <Icon name="send" className="h-3.5 w-3.5" /> Mark as paid
           </button>
         )}
         {p.status === "paid" && (
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-100">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-emerald-50 to-emerald-100 px-3 py-1.5 text-xs font-semibold text-emerald-700 ring-1 ring-emerald-200">
             <Icon name="check" className="h-3.5 w-3.5" sw={3} />
             <span className="font-mono">{p.reference || "Paid"}</span>
           </span>
@@ -838,7 +867,6 @@ function EscrowPanel({ data, reload, notify }) {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Filter pills */}
       <div className="inline-flex gap-1 self-start rounded-full bg-neutral-100 p-1">
         {[
           ["all", "All", data.escrow.length],
@@ -853,11 +881,15 @@ function EscrowPanel({ data, reload, notify }) {
               onClick={() => setFilter(id)}
               className={cx(
                 "inline-flex cursor-pointer items-center gap-1.5 rounded-full px-4 py-1.5 text-xs font-semibold transition-all",
-                on ? "bg-white text-neutral-900 shadow-sm" : "text-neutral-500 hover:text-neutral-900"
+                on
+                  ? danger
+                    ? "bg-gradient-to-r from-red-500 to-red-600 text-white shadow-md shadow-red-500/25"
+                    : "bg-gradient-to-r from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] text-white shadow-md shadow-orange-500/25"
+                  : "text-neutral-500 hover:text-neutral-900"
               )}
             >
               {text}
-              <span className={cx("rounded-full px-1.5 text-[10px] font-bold tabular-nums", on ? (danger ? "bg-red-500 text-white" : "bg-neutral-900 text-white") : "bg-white text-neutral-500")}>
+              <span className={cx("rounded-full px-1.5 text-[10px] font-bold tabular-nums", on ? "bg-white/25 text-white" : "bg-white text-neutral-500")}>
                 {count}
               </span>
             </button>
@@ -882,7 +914,7 @@ function EscrowPanel({ data, reload, notify }) {
                 )}
               >
                 <div className="flex flex-wrap items-center gap-4 p-4">
-                  <span className={cx("grid h-11 w-11 shrink-0 place-items-center rounded-xl", isDisputed ? "bg-red-50 text-red-500" : "bg-teal-50 text-teal-600")}>
+                  <span className={cx("grid h-11 w-11 shrink-0 place-items-center rounded-xl text-white shadow-md", isDisputed ? "bg-gradient-to-br from-red-500 to-red-600 shadow-red-500/30" : "bg-gradient-to-br from-teal-500 to-teal-600 shadow-teal-500/30")}>
                     <Icon name={isDisputed ? "alert" : "lock"} className="h-5 w-5" />
                   </span>
 
@@ -890,7 +922,7 @@ function EscrowPanel({ data, reload, notify }) {
                     <div className="flex items-center gap-2">
                       <p className="font-mono text-xs font-bold text-neutral-900">#{e.orderId}</p>
                       {isDisputed && (
-                        <span className="rounded-full bg-red-500 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white">
+                        <span className="rounded-full bg-gradient-to-r from-red-500 to-red-600 px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider text-white shadow-sm">
                           Disputed
                         </span>
                       )}
@@ -912,15 +944,11 @@ function EscrowPanel({ data, reload, notify }) {
                     )}
                   </div>
 
+                  {/* 🔴 or 🟠 Release button */}
                   <button
                     type="button"
                     onClick={() => setDialog(e)}
-                    className={cx(
-                      "inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold transition-all hover:-translate-y-0.5 hover:shadow-md",
-                      isDisputed
-                        ? "bg-red-500 text-white hover:bg-red-600"
-                        : "bg-neutral-900 text-white hover:bg-neutral-800"
-                    )}
+                    className={isDisputed ? BTN.danger : BTN.primary}
                   >
                     <Icon name="unlock" className="h-3.5 w-3.5" />
                     {isDisputed ? "Release anyway" : "Release"}
@@ -931,7 +959,7 @@ function EscrowPanel({ data, reload, notify }) {
                   <div className="px-4 pb-4">
                     <div className="h-1.5 overflow-hidden rounded-full bg-neutral-100">
                       <div
-                        className={cx("h-full rounded-full transition-all", pct > 85 ? "bg-orange-400" : "bg-teal-400")}
+                        className={cx("h-full rounded-full transition-all", pct > 85 ? "bg-gradient-to-r from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)]" : "bg-gradient-to-r from-teal-400 to-teal-500")}
                         style={{ width: `${pct}%` }}
                       />
                     </div>
@@ -1015,9 +1043,8 @@ function CommissionPanel({ data, reload, notify }) {
 
   return (
     <div className="flex flex-col gap-4">
-      {/* Summary bar */}
       <div className="flex flex-wrap items-center gap-4 rounded-2xl border border-neutral-200 bg-white p-4">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-violet-50 text-violet-600">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-md shadow-violet-500/30">
           <Icon name="percent" className="h-5 w-5" />
         </span>
         <div className="min-w-0 flex-1">
@@ -1035,7 +1062,6 @@ function CommissionPanel({ data, reload, notify }) {
         )}
       </div>
 
-      {/* Rates */}
       <ul className="divide-y divide-neutral-100 overflow-hidden rounded-2xl border border-neutral-200 bg-white">
         {rows.map((r) => {
           const keep = (EXAMPLE * r.rate) / 100;
@@ -1091,7 +1117,7 @@ function CommissionPanel({ data, reload, notify }) {
       {error && <p role="alert" className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700">{error}</p>}
 
       {dirty && (
-        <div className="sticky bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-neutral-900 p-3 pl-5 text-white shadow-2xl">
+        <div className="sticky bottom-4 z-10 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-gradient-to-r from-neutral-900 to-neutral-800 p-3 pl-5 text-white shadow-2xl">
           <p className="text-sm">
             {invalid ? "⚠️ Rates must be between 0% and 50%." : "You have unsaved changes."}
           </p>
@@ -1104,11 +1130,12 @@ function CommissionPanel({ data, reload, notify }) {
             >
               Reset
             </button>
+            {/* 🟣 Save rates — violet gradient */}
             <button
               type="button"
               onClick={save}
               disabled={invalid || saving}
-              className="inline-flex cursor-pointer items-center gap-2 rounded-full bg-violet-500 px-5 py-2 text-sm font-bold text-white transition hover:bg-violet-600 disabled:cursor-not-allowed disabled:bg-neutral-700"
+              className={BTN.violet}
             >
               {saving && <span className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-white/30 border-t-white" />}
               Save rates
@@ -1124,12 +1151,12 @@ function CommissionPanel({ data, reload, notify }) {
    ACTIVITY
    ═══════════════════════════════════════════════════════════ */
 const KIND = {
-  approve: ["check", "bg-neutral-900 text-white"],
-  pay: ["send", "bg-emerald-50 text-emerald-600"],
-  reject: ["x", "bg-red-50 text-red-600"],
-  release: ["unlock", "bg-orange-50 text-orange-600"],
-  rate: ["percent", "bg-violet-50 text-violet-600"],
-  other: ["list", "bg-neutral-100 text-neutral-600"],
+  approve: ["check", "bg-gradient-to-br from-neutral-700 to-neutral-900 text-white shadow-md shadow-neutral-900/20"],
+  pay: ["send", "bg-gradient-to-br from-emerald-500 to-emerald-600 text-white shadow-md shadow-emerald-500/25"],
+  reject: ["x", "bg-gradient-to-br from-red-500 to-red-600 text-white shadow-md shadow-red-500/25"],
+  release: ["unlock", "bg-gradient-to-br from-[var(--color-brand-orange)] to-[var(--color-brand-orange-dark)] text-white shadow-md shadow-orange-500/25"],
+  rate: ["percent", "bg-gradient-to-br from-violet-500 to-violet-600 text-white shadow-md shadow-violet-500/25"],
+  other: ["list", "bg-gradient-to-br from-neutral-500 to-neutral-700 text-white shadow-md shadow-neutral-500/25"],
 };
 
 function ActivityPanel({ data }) {
@@ -1168,7 +1195,7 @@ function ActivityPanel({ data }) {
 function Empty({ title, hint, action }) {
   return (
     <div className="rounded-2xl border-2 border-dashed border-neutral-200 bg-white px-6 py-16 text-center">
-      <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-neutral-100 text-2xl">
+      <div className="mx-auto grid h-14 w-14 place-items-center rounded-2xl bg-gradient-to-br from-neutral-100 to-neutral-50 text-2xl">
         ✨
       </div>
       <p className="mt-3 font-semibold text-neutral-900">{title}</p>
@@ -1275,8 +1302,8 @@ function ConfirmDialog({ title, description, confirmLabel, tone = "primary", fie
             onClick={submit}
             disabled={missing || busy}
             className={cx(
-              "inline-flex flex-[1.4] cursor-pointer items-center justify-center gap-2 rounded-full px-5 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:shadow-lg disabled:cursor-not-allowed disabled:bg-neutral-200 disabled:text-neutral-400 disabled:shadow-none disabled:hover:translate-y-0",
-              tone === "danger" ? "bg-red-500 hover:bg-red-600" : "bg-neutral-900 hover:bg-neutral-800"
+              "flex-[1.4]",
+              tone === "danger" ? BTN.danger : BTN.primaryLg
             )}
           >
             {busy && <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />}
