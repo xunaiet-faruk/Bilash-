@@ -57,8 +57,7 @@ admin: [
     {
       group: "Operations",
       items: [
-        { label: "China Sourcing", href: "/china-sourcing", icon: Globe },
-        { label: "Courier & Logistics", href: "/logistics", icon: Truck },
+        { label: "Courier & Logistics", href: "/courier&Logistics", icon: Truck },
         { label: "Fraud & Risk", href: "/security/fraud", icon: Shield },
       ],
     },
