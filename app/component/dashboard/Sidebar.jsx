@@ -5,6 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   Home,
+   Store,
+  Boxes,
+  Ticket,
   BarChart2,
   Package,
   Tag,
@@ -30,7 +33,7 @@ import {
 
 
 const NAV = {
-  admin: [
+admin: [
     {
       group: "Overview",
       items: [
@@ -44,8 +47,10 @@ const NAV = {
         { label: "Catalog & Approvals", href: "/catalog", icon: Package },
         { label: "Categories", href: "/categories", icon: Tag },
         { label: "Products", href: "/allproducts", icon: Package },
-        { label: "Add-Product", href: "/addproducts/add", icon: CirclePlus },
+        { label: "Add Product", href: "/addproducts/add", icon: CirclePlus },
+        { label: "Inventory", href: "/inventory", icon: Boxes },          // 🆕
         { label: "Orders", href: "/orders", icon: Receipt },
+        { label: "Coupons", href: "/coupons", icon: Ticket },              // 🆕
         { label: "Payout & Escrow", href: "/finance", icon: CreditCard },
       ],
     },
@@ -61,13 +66,16 @@ const NAV = {
       group: "People",
       items: [
         { label: "Customers", href: "/customers", icon: Users },
+        { label: "KYC Queue", href: "/kyc", icon: ShieldCheck },           // 🆕
+        { label: "Vendors", href: "/sellers", icon: Store },               // 🔄 renamed
         { label: "Resellers", href: "/resellers", icon: ShoppingBag },
-        { label: "Sellers", href: "/sellers", icon: ShoppingBag },
+        { label: "Affiliates", href: "/affiliates", icon: Share2 },        // 🆕
       ],
     },
     {
       group: "System",
       items: [
+        { label: "Disputes", href: "/disputes", icon: LifeBuoy },          // 🆕
         { label: "Reviews", href: "/reviews", icon: Star },
         { label: "Support", href: "/support", icon: LifeBuoy },
         { label: "Settings", href: "/settings", icon: Settings },
