@@ -47,7 +47,7 @@ admin: [
         { label: "Catalog & Approvals", href: "/catalog", icon: Package },
         { label: "Categories", href: "/categories", icon: Tag },
         { label: "Products", href: "/allproducts", icon: Package },
-        { label: "Add Product", href: "/addproducts/add", icon: CirclePlus },
+        { label: "Add Product", href: "/products/add", icon: CirclePlus },
         { label: "Inventory", href: "/inventory", icon: Boxes },          // 🆕
         { label: "Orders", href: "/orders", icon: Receipt },
         { label: "Coupons", href: "/coupons", icon: Ticket },              // 🆕
@@ -65,7 +65,6 @@ admin: [
       group: "People",
       items: [
         { label: "Customers", href: "/customers", icon: Users },
-        { label: "KYC Queue", href: "/kyc", icon: ShieldCheck },           // 🆕
         { label: "Vendors", href: "/sellers", icon: Store },               // 🔄 renamed
         { label: "Resellers", href: "/resellers", icon: ShoppingBag },
         { label: "Affiliates", href: "/affiliates", icon: Share2 },        // 🆕
