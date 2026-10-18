@@ -38,7 +38,6 @@ admin: [
       group: "Overview",
       items: [
         { label: "Global Dashboard", href: "", icon: Home },
-        { label: "Analytics", href: "/analytics", icon: BarChart2 },
       ],
     },
     {
