@@ -66,7 +66,7 @@ function Stat({ icon: Icon, label, value, hint }) {
   );
 }
 
-/function CouponTicket({ c, onToggle, onDelete }) {
+function CouponTicket({ c, onToggle, onDelete }) {
   const status = getStatus(c);
   const dead = status === "expired" || status === "used up";
   const pct = Math.min(100, Math.round((c.usage / c.maxUsage) * 100));
@@ -160,7 +160,6 @@ function Stat({ icon: Icon, label, value, hint }) {
       </div>
     </article>
   );
-
 }
 
 const inputCls = "w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-orange-500 focus:ring-4 focus:ring-orange-500/10";
